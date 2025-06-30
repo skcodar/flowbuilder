@@ -9,6 +9,8 @@ function App() {
       {/* <NodeCreat/> */}
       {/* <CustomEdgs/> */}
       <DragDrop/>
+
+
     </div>
   );
 }

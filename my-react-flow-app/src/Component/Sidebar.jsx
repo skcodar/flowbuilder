@@ -7,37 +7,16 @@ export default function Sidebar() {
   };
 
   return (
-    <aside style={sidebarStyle}>
-      <h4>CONTENTS</h4>
+    <aside className="absolute top-0 left-0 w-[200px] h-screen p-5 bg-gray-50 border-r border-gray-300 z-50">
+      <h4 className="text-sm font-semibold text-gray-700 mb-3">CONTENTS</h4>
+      
       <div
-        style={nodeStyle}
         draggable
         onDragStart={onDragStart}
+        className="p-2 bg-white border border-gray-500 rounded cursor-grab text-center mt-2 shadow-sm hover:bg-gray-100 transition"
       >
         Node
       </div>
     </aside>
   );
 }
-
-const sidebarStyle = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: 200,
-  height: '100vh',
-  padding: '20px 10px',
-  background: '#f9f9f9',
-  borderRight: '1px solid #ccc',
-  zIndex: 50,
-};
-
-const nodeStyle = {
-  padding: '10px',
-  background: '#fff',
-  border: '1px solid #888',
-  borderRadius: '4px',
-  cursor: 'grab',
-  textAlign: 'center',
-  marginTop: '10px',
-};

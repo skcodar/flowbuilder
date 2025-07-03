@@ -9,80 +9,38 @@ import {
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
-import ColorSelectorNode from './CustomInputNode';
-import CustomInputNode from './CustomInputNode'; // 👈 New node
+import FlowStart from './FlowStart';
+import Sidebar from './Sidebar';
+import TextButton from './TextButton';
 
-const initBgColor = '#c9f1dd';
-const snapGrid = [20, 20];
-
-// ✅ Register all custom nodes here
 const nodeTypes = {
-  selectorNode: ColorSelectorNode,
-  customInput: CustomInputNode, // 👈 new type for node 1
+  customInput: FlowStart,
+  textButton: TextButton,
 };
 
+const snapGrid = [20, 20];
 const defaultViewport = { x: 0, y: 0, zoom: 1.5 };
 
 const CustomNodeFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [bgColor, setBgColor] = useState(initBgColor);
 
+  // ✅ Delete node by ID
+  const deleteNodeById = (nodeId) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+  };
+
+  // ✅ Add default node on mount
   useEffect(() => {
-    const onChange = (event) => {
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (node.id !== '2') return node;
-
-          const color = event.target.value;
-          setBgColor(color);
-
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              color,
-            },
-          };
-        })
-      );
-    };
-
     setNodes([
       {
         id: '1',
-        type: 'customInput', // 👈 changed from 'input' to your custom type
-        data: {},
-        position: { x: 0, y: 50 },
+        type: 'customInput',
+        position: { x: 100, y: 100 },
+        data: { onDelete: () => deleteNodeById('1') },
       },
-    //   {
-    //     id: '2',
-    //     type: 'selectorNode',
-    //     data: { onChange: onChange, color: initBgColor },
-    //     position: { x: 300, y: 50 },
-    //   },
-    //   {
-    //     id: '3',
-    //     type: 'output',
-    //     data: { label: 'Output A' },
-    //     position: { x: 650, y: 25 },
-    //     targetPosition: 'left',
-    //   },
-    //   {
-    //     id: '4',
-    //     type: 'output',
-    //     data: { label: 'Output B' },
-    //     position: { x: 650, y: 100 },
-    //     targetPosition: 'left',
-    //   },
-    //   {
-    //     id: '5',
-    //     type: 'output',
-    //     data: { label: 'Output C' },
-    //     position: { x: 650, y: 50 },
-    //     targetPosition: 'left',
-    //   },
-     ]);
+    ]);
   }, []);
 
   const onConnect = useCallback(
@@ -90,24 +48,57 @@ const CustomNodeFlow = () => {
     []
   );
 
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+      const type = event.dataTransfer.getData('application/reactflow');
+      if (!type) return;
+
+      const reactFlowBounds = event.target.getBoundingClientRect();
+      const position = {
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      };
+
+      const id = `${+new Date()}`;
+      const newNode = {
+        id,
+        type,
+        position,
+        data: { onDelete: () => deleteNodeById(id) },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [setNodes]
+  );
+
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        nodeTypes={nodeTypes}
-        snapToGrid={true}
-        snapGrid={snapGrid}
-        defaultViewport={defaultViewport}
-        fitView
-        attributionPosition="bottom-left"
-      >
-        <Background />
-        <Controls />
-      </ReactFlow>
+    <div className="w-screen h-screen flex relative">
+      <Sidebar />
+
+      <div className="flex-1" onDrop={onDrop} onDragOver={onDragOver}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          snapToGrid
+          snapGrid={snapGrid}
+          defaultViewport={defaultViewport}
+          fitView
+        >
+          <Background />
+          <Controls />
+        </ReactFlow>
+      </div>
     </div>
   );
 };

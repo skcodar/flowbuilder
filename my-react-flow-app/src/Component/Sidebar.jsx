@@ -22,7 +22,7 @@ export default function Sidebar() {
         onDragStart={(event) => onDragStart(event, 'textButton')}
         className="p-2 bg-white border border-gray-500 rounded cursor-grab text-center mt-2 shadow-sm hover:bg-gray-100 transition"
       >
-        Custom Input Node
+        Text-Button
       </div>
     </aside>
   );

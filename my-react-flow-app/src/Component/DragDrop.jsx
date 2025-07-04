@@ -92,8 +92,7 @@ const CustomNodeFlow = () => {
           nodeTypes={nodeTypes}
           snapToGrid
           snapGrid={snapGrid}
-          defaultViewport={defaultViewport}
-          fitView
+          defaultViewport={{ x: 0, y: 0, zoom: 1 }}
         >
           <Background />
           <Controls />

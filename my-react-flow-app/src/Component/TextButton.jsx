@@ -1,82 +1,209 @@
-import React, { useState } from 'react';
-import { Handle, Position } from '@xyflow/react';
-import { FaRocket, FaTimes } from 'react-icons/fa';
+import React, { useState } from "react";
+import { Handle, Position } from "@xyflow/react";
+import {
+  FaRocket,
+  FaTimes,
+  FaBold,
+  FaItalic,
+  FaStrikethrough,
+  FaRegSmile,
+  FaLink,
+  FaPhoneAlt,
+  FaRegClone,
+  FaReply,
+  FaThLarge,
+} from "react-icons/fa";
 
-const TextButton = ({ data }) => {
-  const [keywords, setKeywords] = useState(['Hi', 'Hello']);
-  const [inputValue, setInputValue] = useState('');
+const TextButtonsNode = ({ data }) => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [contentBlocks, setContentBlocks] = useState([]);
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
-      setKeywords([...keywords, inputValue.trim()]);
-      setInputValue('');
+  const addBlock = (type) => {
+    setContentBlocks((prev) => [...prev, { type, id: Date.now() }]);
+    setShowDropdown(false);
+  };
+
+  const renderBlock = (block) => {
+    switch (block.type) {
+      case "quick":
+        return (
+          <div
+            key={block.id}
+            className="flex items-center gap-2 rounded-md border border-gray-300 bg-white mt-2 px-2 py-2"
+          >
+            <FaReply className="shrink-0 text-gray-500 text-sm" />
+            <input
+              type="text"
+              placeholder="Quick Reply"
+              className="flex-1 outline-none text-sm"
+            />
+          </div>
+        );
+
+      case "copy":
+        return (
+          <div
+            key={block.id}
+            className="flex items-center gap-2 rounded-md border border-gray-300 mt-2 bg-white px-2 py-2"
+          >
+            <FaRegClone className="shrink-0 text-gray-500 text-sm" />
+            <input
+              type="text"
+              placeholder="Copy Code"
+              className="flex-1 outline-none text-sm"
+            />
+          </div>
+        );
+
+      case "phone":
+        return (
+          <div
+            key={block.id}
+            className="flex gap-2 rounded-md border border-gray-300 mt-2 bg-white p-2">
+            <FaPhoneAlt className="mt-1 shrink-0 text-sm text-gray-500" />
+            <div className="flex flex-1 flex-col gap-1">
+              <input
+                type="text"
+                placeholder="Title"
+                className="border-b border-gray-300 pb-[2px] outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Number"
+                className="outline-none"
+              />
+            </div>
+          </div>
+        );
+
+      case "url":
+        return (
+          <div
+            key={block.id}
+            className="flex gap-2 rounded-md border border-gray-300 mt-2 bg-white p-2"
+          >
+            <FaLink className="mt-1 shrink-0 text-sm text-gray-500" />
+            <div className="flex flex-1 flex-col gap-1">
+              <input
+                type="text"
+                placeholder="Title"
+                className="border-b border-gray-300 pb-[2px] outline-none"
+              />
+              <input
+                type="text"
+                placeholder="URL"
+                className="outline-none"
+              />
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
     }
   };
 
-  const handleRemove = (i) => {
-    setKeywords((prev) => prev.filter((_, idx) => idx !== i));
-  };
-
   return (
-    <div className="w-[200px] rounded-md border border-gray-200 bg-white relative shadow-lg">
-       {/* Left Handle (input connection) */}
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-green-500" />
-
-      {/* Right Handle (output connection) */}
-      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500" /> 
-
+    <div className="relative w-[260px] rounded-md border border-gray-200 bg-white shadow-lg text-[13px]">
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="!w-3 !h-3 !bg-green-500"
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="!w-3 !h-3 !bg-green-500"
+      />
 
       {/* Header */}
-      <div className="w-full flex rounded-md mb-1 bg-white relative">
-        <div className="absolute h-full top-0 left-0 w-[7px] bg-green-500 rounded-l-md" />
-        <div className="w-full flex items-center justify-between px-2 py-1">
-          <div className="bg-green-100 text-green-600 p-1 ml-2 rounded-full">
-            <FaRocket className="text-sm" />
-          </div>
-          <span className="text-[11px] font-semibold text-green-700">Flow Start</span>
-          <button
-            className="text-green-600 hover:text-red-500 cursor-pointer"
-            onClick={data?.onDelete}
-          >
-            <FaTimes className="text-sm" />
-          </button>
+      <header className="relative flex items-center mb-1 justify-between px-3 py-2 shadow-lg">
+        <span className="absolute left-0 top-0 h-full w-[6px] rounded-l-md bg-green-600" />
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-green-100 p-[6px] text-green-600">
+            <FaRocket className="text-[17px]" />
+          </span>
+          <span className="text-[16px] font-semibold text-green-700">
+            Text + Buttons
+          </span>
         </div>
-      </div>
+        <button
+          onClick={data?.onDelete}
+          className="text-green-600 transition hover:text-red-500 cursor-pointer"
+        >
+          <FaTimes className="text-[15px]" />
+        </button>
+      </header>
 
-      {/* Content */}
-      <div className="p-2 bg-[#EBF5F3]">
-        <div className="space-y-1 mb-[2px]">
-          {keywords.map((word, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between border border-green-400 text-green-800 rounded p-[6px] text-[8px] bg-white"
-            >
-              <span>{word}</span>
+      {/* Body */}
+      <div className="p-2">
+
+        {/* Text area */}
+         <div className="bg-[#EBF5F3] p-2">
+        <div className="space-y-1 rounded-md border border-gray-300 bg-white p-2">
+          <textarea
+            placeholder="Body Text"
+            className="h-24 w-full resize-none outline-none placeholder-gray-400"
+          />
+          <div className="flex items-center gap-3 text-xs text-gray-500">
+            <FaBold />
+            <FaItalic />
+            <FaStrikethrough />
+            <FaRegSmile />
+            <span className="ml-auto">(x)</span>
+          </div>
+        </div>
+
+        {/* Render added blocks */}
+        {contentBlocks.map(renderBlock)}
+
+        {/* Add Content dropdown */}
+        <div className="relative mt-2 ">
+          <button
+            className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 py-2 text-[12px] font-medium text-gray-700 cursor-pointer hover:bg-gray-300"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            <FaThLarge className="text-[12px]" />
+            Add Content
+          </button>
+
+          {showDropdown && (
+            <div className="absolute z-10 mt-1 w-full rounded-md border  bg-white shadow overflow-hidden ">
               <button
-                className="hover:text-red-600 cursor-pointer"
-                onClick={() => handleRemove(index)}
+                onClick={() => addBlock("quick")}
+                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b cursor-pointer"
               >
-                <FaTimes className="text-xs text-[8px]" />
+                <FaReply className="text-sm" />
+                Quick Reply
+              </button>
+              <button
+                onClick={() => addBlock("copy")}
+                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b cursor-pointer"
+              >
+                <FaRegClone className="text-sm" />
+                Copy Code
+              </button>
+              <button
+                onClick={() => addBlock("url")}
+                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b cursor-pointer"
+              >
+                <FaLink className="text-sm" />
+                URL Button
+              </button>
+              <button
+                onClick={() => addBlock("phone")}
+                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 cursor-pointer"
+              >
+                <FaPhoneAlt className="text-sm" />
+                Phone Number
               </button>
             </div>
-          ))}
+          )}
         </div>
-
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your keyword"
-          className="w-full border border-green-400 rounded p-[6px] text-[8px] placeholder-gray-500 text-green-700 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
-        />
-
-        <button className="w-full border border-green-500 text-[8px] text-green-500 rounded p-1 hover:bg-green-50 bg-white transition mt-5">
-          Choose template
-        </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default TextButton;
+export default TextButtonsNode;

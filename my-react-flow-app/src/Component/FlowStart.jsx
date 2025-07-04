@@ -47,7 +47,7 @@ const FlowStartNode = () => {
             {keywords.map((word, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between border border-green-400 text-green-800 rounded p-[6px] text-[8px] bg-white"
+                className="flex items-center justify-between border border-[#bfc6c1] text-green-800 rounded p-[6px] text-[8px] bg-white"
               >
                 <span>{word}</span>
                 <button
@@ -67,11 +67,11 @@ const FlowStartNode = () => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type your keyword"
-            className="w-full border border-green-400 rounded p-[6px] text-[8px] placeholder-gray-500 text-green-700 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
+            className="w-full border border-[#bfc6c1] rounded p-[6px] text-[8px] placeholder-gray-500 text-green-700 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
           />
 
           {/* Button */}
-          <button className="w-full border border-green-500 text-[8px] text-green-500 rounded p-1 hover:bg-green-50 bg-white transition mt-5">
+          <button className="w-full border border-[#bfc6c1] text-[8px] text-[#505050] rounded p-1 hover:bg-green-50 bg-white transition mt-5">
             Choose template
           </button>
         </div>

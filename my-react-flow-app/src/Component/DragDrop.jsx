@@ -6,7 +6,9 @@ import {
   addEdge,
   Controls,
   Background,
+  getBezierPath,
 } from '@xyflow/react';
+import { FaTimes } from 'react-icons/fa';
 
 import '@xyflow/react/dist/style.css';
 import FlowStart from './FlowStart';
@@ -19,7 +21,76 @@ const nodeTypes = {
 };
 
 const snapGrid = [20, 20];
-const defaultViewport = { x: 0, y: 0, zoom: 1.5 };
+const defaultViewport = { x: 0, y: 0, zoom: 1 };
+
+// ✅ Custom edge with delete icon
+const CustomEdge = ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  style = {},
+  markerEnd,
+  data,
+}) => {
+  const [edgePath, labelX, labelY] = getBezierPath({
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+  });
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (data?.onDelete) data.onDelete(id);
+  };
+
+  return (
+    <>
+      <path
+        id={id}
+        style={style}
+        className="react-flow__edge-path"
+        d={edgePath}
+        markerEnd={markerEnd}
+      />
+      <foreignObject
+        width={30}
+        height={30}
+        x={labelX - 15}
+        y={labelY - 15}
+        requiredExtensions="http://www.w3.org/1999/xhtml"
+      >
+        <div
+          onClick={handleDelete}
+          style={{
+            width: '100%',
+            height: '100%',
+            background: 'white',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            border: '1px solid lightgray',
+            boxShadow: '0 0 2px rgba(0,0,0,0.2)',
+          }}
+        >
+          <FaTimes color="red" size={12} />
+        </div>
+      </foreignObject>
+    </>
+  );
+};
+
+const edgeTypes = {
+  custom: CustomEdge,
+};
 
 const CustomNodeFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -28,7 +99,9 @@ const CustomNodeFlow = () => {
   // ✅ Delete node by ID
   const deleteNodeById = (nodeId) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-    setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+    setEdges((eds) =>
+      eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
+    );
   };
 
   // ✅ Add default node on mount
@@ -44,8 +117,22 @@ const CustomNodeFlow = () => {
   }, []);
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge({ ...params, animated: true }, eds)),
-    []
+    (params) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: 'custom',
+            animated: true,
+            data: {
+              onDelete: (id) =>
+                setEdges((es) => es.filter((e) => e.id !== id)),
+            },
+          },
+          eds
+        )
+      ),
+    [setEdges]
   );
 
   const onDragOver = useCallback((event) => {
@@ -90,9 +177,10 @@ const CustomNodeFlow = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           snapToGrid
           snapGrid={snapGrid}
-          defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+          defaultViewport={defaultViewport}
         >
           <Background />
           <Controls />

@@ -168,31 +168,31 @@ const TextButtonsNode = ({ data }) => {
           </button>
 
           {showDropdown && (
-            <div className="absolute z-10 mt-1 w-full rounded-md border  bg-white shadow overflow-hidden ">
+            <div className="absolute z-10 mt-1 w-full rounded-md border border-[#E4DFDF] bg-white shadow overflow-hidden ">
               <button
                 onClick={() => addBlock("quick")}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b cursor-pointer"
+                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
               >
                 <FaReply className="text-sm" />
                 Quick Reply
               </button>
               <button
                 onClick={() => addBlock("copy")}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b cursor-pointer"
+                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
               >
                 <FaRegClone className="text-sm" />
                 Copy Code
               </button>
               <button
                 onClick={() => addBlock("url")}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b cursor-pointer"
+                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
               >
                 <FaLink className="text-sm" />
                 URL Button
               </button>
               <button
                 onClick={() => addBlock("phone")}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 cursor-pointer"
+                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-[#E4DFDF] cursor-pointer"
               >
                 <FaPhoneAlt className="text-sm" />
                 Phone Number

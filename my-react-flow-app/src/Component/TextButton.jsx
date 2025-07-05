@@ -139,67 +139,67 @@ const TextButtonsNode = ({ data }) => {
       <div className="p-2">
 
         {/* Text area */}
-         <div className="bg-[#EBF5F3] p-2">
-        <div className="space-y-1 rounded-md border border-gray-300 bg-white p-2">
-          <textarea
-            placeholder="Body Text"
-            className="h-24 w-full resize-none outline-none placeholder-gray-400"
-          />
-          <div className="flex items-center gap-3 text-xs text-gray-500">
-            <FaBold />
-            <FaItalic />
-            <FaStrikethrough />
-            <FaRegSmile />
-            <span className="ml-auto">(x)</span>
-          </div>
-        </div>
-
-        {/* Render added blocks */}
-        {contentBlocks.map(renderBlock)}
-
-        {/* Add Content dropdown */}
-        <div className="relative mt-2 ">
-          <button
-            className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 py-2 text-[12px] font-medium text-gray-700 cursor-pointer hover:bg-gray-300"
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            <FaThLarge className="text-[12px]" />
-            Add Content
-          </button>
-
-          {showDropdown && (
-            <div className="absolute z-10 mt-1 w-full rounded-md border border-[#E4DFDF] bg-white shadow overflow-hidden ">
-              <button
-                onClick={() => addBlock("quick")}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
-              >
-                <FaReply className="text-sm" />
-                Quick Reply
-              </button>
-              <button
-                onClick={() => addBlock("copy")}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
-              >
-                <FaRegClone className="text-sm" />
-                Copy Code
-              </button>
-              <button
-                onClick={() => addBlock("url")}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
-              >
-                <FaLink className="text-sm" />
-                URL Button
-              </button>
-              <button
-                onClick={() => addBlock("phone")}
-                className="w-full flex items-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-[#E4DFDF] cursor-pointer"
-              >
-                <FaPhoneAlt className="text-sm" />
-                Phone Number
-              </button>
+        <div className="bg-[#EBF5F3] p-2">
+          <div className="space-y-1 rounded-md border border-gray-300 bg-white p-2">
+            <textarea
+              placeholder="Body Text"
+              className="h-24 w-full resize-none outline-none placeholder-gray-400"
+            />
+            <div className="flex items-center gap-3 text-xs text-gray-500">
+              <FaBold />
+              <FaItalic />
+              <FaStrikethrough />
+              <FaRegSmile />
+              <span className="ml-auto">(x)</span>
             </div>
-          )}
-        </div>
+          </div>
+
+          {/* Render added blocks */}
+          {contentBlocks.map(renderBlock)}
+
+          {/* Add Content dropdown */}
+          <div className="relative mt-2 ">
+            <button
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 py-2 text-[12px] font-medium text-gray-700 cursor-pointer hover:bg-gray-300"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <FaThLarge className="text-[12px]" />
+              Add Content
+            </button>
+
+            {showDropdown && (
+              <div className="absolute z-10 mt-1 w-full rounded-md border border-[#E4DFDF] bg-white shadow overflow-hidden ">
+                <button
+                  onClick={() => addBlock("quick")}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
+                >
+                  <FaReply className="text-sm mr-3" />
+                  Quick Reply
+                </button>
+                <button
+                  onClick={() => addBlock("copy")}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
+                >
+                  <FaRegClone className="text-sm mr-3" />
+                  Copy Code
+                </button>
+                <button
+                  onClick={() => addBlock("url")}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-b border-[#E4DFDF] cursor-pointer"
+                >
+                  <FaLink className="text-sm mr-3" />
+                  URL Button
+                </button>
+                <button
+                  onClick={() => addBlock("phone")}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 text-left text-sm hover:bg-gray-100 border-[#E4DFDF] cursor-pointer"
+                >
+                  <FaPhoneAlt className="text-sm mr-3" />
+                  Ph. Number
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

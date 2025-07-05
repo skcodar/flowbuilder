@@ -44,41 +44,41 @@ const FlowStartNode = () => {
 
       {/* Content */}
       <div className='p-2'>
-      <div className="p-2 bg-[#EBF5F3]">
-        {/* Keyword List */}
-        <div className="space-y-2 mb-2">
-          {keywords.map((word, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between border border-gray-300 text-green-800 rounded px-2 py-1 text-[12px] bg-white"
-            >
-              <span>{word}</span>
-              <button
-                className="hover:text-red-600 cursor-pointer"
-                onClick={() => handleRemove(index)}
+        <div className="p-2 bg-[#EBF5F3]">
+          {/* Keyword List */}
+          <div className="space-y-2 mb-2">
+            {keywords.map((word, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between border border-gray-300 text-green-800 rounded px-2 py-1 text-[12px] bg-white"
               >
-                <FaTimes className="text-[13px]" />
-              </button>
-            </div>
-          ))}
+                <span>{word}</span>
+                <button
+                  className="hover:text-red-600 cursor-pointer"
+                  onClick={() => handleRemove(index)}
+                >
+                  <FaTimes className="text-[13px]" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Input */}
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your keyword"
+            className="w-full border border-gray-300 rounded px-2 py-1 text-[12px] placeholder-gray-500 text-green-700 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
+          />
+
+          {/* Choose Template Button */}
+          <button className="w-full mt-4 border border-gray-300 text-[12px] text-gray-700 rounded px-2 py-2 bg-white hover:bg-green-50 transition">
+            Choose template
+          </button>
         </div>
-
-        {/* Input */}
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your keyword"
-          className="w-full border border-gray-300 rounded px-2 py-1 text-[12px] placeholder-gray-500 text-green-700 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
-        />
-
-        {/* Choose Template Button */}
-        <button className="w-full mt-4 border border-gray-300 text-[12px] text-gray-700 rounded px-2 py-2 bg-white hover:bg-green-50 transition">
-          Choose template
-        </button>
       </div>
-    </div>
     </div>
   );
 };

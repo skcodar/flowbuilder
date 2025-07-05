@@ -23,7 +23,7 @@ const FlowStartNode = () => {
       <Handle
         type="source"
         position={Position.Right}
-        className="!w-3 !h-3 !bg-green-500"
+        className="!w-3 !h-3 !bg-[#E4DFDF]"
       />
 
       {/* Header */}

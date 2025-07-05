@@ -29,14 +29,21 @@ const TextButtonsNode = ({ data }) => {
         return (
           <div
             key={block.id}
-            className="flex items-center gap-2 rounded-md border border-gray-300 bg-white mt-2 px-2 py-2"
+            className="relative flex items-center gap-2 rounded-md border border-gray-300 bg-white mt-2 px-2 py-2"
           >
             <FaReply className="shrink-0 text-gray-500 text-sm" />
-            <input
-              type="text"
-              placeholder="Quick Reply"
-              className="flex-1 outline-none text-sm"
-            />
+            <div>
+              <input
+                type="text"
+                placeholder="Quick Reply"
+                className="flex-1 outline-none text-sm"
+              />
+              <Handle
+                type="source"
+                position={Position.Right}
+                className="!w-2.5 !h-2.5 !bg-[#E4DFDF] !absolute top-[11px] !-translate-y-1/2"
+              />
+            </div>
           </div>
         );
 
@@ -59,9 +66,10 @@ const TextButtonsNode = ({ data }) => {
         return (
           <div
             key={block.id}
-            className="flex gap-2 rounded-md border border-gray-300 mt-2 bg-white p-2">
+            className="flex gap-2 rounded-md border border-gray-300 mt-2 bg-white p-2"
+          >
             <FaPhoneAlt className="mt-1 shrink-0 text-sm text-gray-500" />
-            <div className="flex flex-1 flex-col gap-1">
+            <div className="flex flex-1 flex-col justify-center gap-1">
               <input
                 type="text"
                 placeholder="Title"
@@ -108,14 +116,8 @@ const TextButtonsNode = ({ data }) => {
       <Handle
         type="target"
         position={Position.Left}
-        className="!w-3 !h-3 !bg-green-500"
+        className="!w-3 !h-3 !bg-[#E4DFDF]"
       />
-      <Handle
-        type="source"
-        position={Position.Right}
-        className="!w-3 !h-3 !bg-green-500"
-      />
-
       {/* Header */}
       <header className="relative flex items-center mb-1 justify-between px-3 py-2 shadow-lg">
         <span className="absolute left-0 top-0 h-full w-[6px] rounded-l-md bg-green-600" />
@@ -137,7 +139,6 @@ const TextButtonsNode = ({ data }) => {
 
       {/* Body */}
       <div className="p-2">
-
         {/* Text area */}
         <div className="bg-[#EBF5F3] p-2">
           <div className="space-y-1 rounded-md border border-gray-300 bg-white p-2">

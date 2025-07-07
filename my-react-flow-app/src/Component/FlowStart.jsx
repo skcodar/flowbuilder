@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { FaRocket, FaTimes } from 'react-icons/fa';
 
@@ -27,7 +27,7 @@ const FlowStartNode = () => {
       />
 
       {/* Header */}
-      <header className="relative flex items-center justify-between px-3 py-2 shadow-lg">
+      <header className="drag-handle__custom cursor-move relative flex items-center justify-between px-3 py-2 shadow-lg">
         <span className="absolute left-0 top-0 h-full w-[6px] rounded-l-md bg-green-600" />
         <div className="flex items-center gap-2">
           <span className="rounded-full bg-green-100 p-[6px] text-green-600">
@@ -43,7 +43,7 @@ const FlowStartNode = () => {
       </header>
 
       {/* Content */}
-      <div className='p-2'>
+      <div className='p-2 cursor-pointer'>
         <div className="p-2 bg-[#EBF5F3]">
           {/* Keyword List */}
           <div className="space-y-2 mb-2">
@@ -74,7 +74,7 @@ const FlowStartNode = () => {
           />
 
           {/* Choose Template Button */}
-          <button className="w-full mt-4 border border-gray-300 text-[12px] text-gray-700 rounded px-2 py-2 bg-white hover:bg-green-50 transition">
+          <button className="w-full mt-4 border border-gray-300 text-[12px] text-gray-700 rounded px-2 py-2 bg-white hover:bg-green-50 transition cursor-pointer">
             Choose template
           </button>
         </div>
@@ -83,4 +83,4 @@ const FlowStartNode = () => {
   );
 };
 
-export default FlowStartNode;
+export default memo(FlowStartNode);

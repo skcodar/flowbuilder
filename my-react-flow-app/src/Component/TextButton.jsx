@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import {
   FaRocket,
@@ -119,7 +119,7 @@ const TextButtonsNode = ({ data }) => {
         className="!w-3 !h-3 !bg-[#E4DFDF]"
       />
       {/* Header */}
-      <header className="relative flex items-center mb-1 justify-between px-3 py-2 shadow-lg">
+      <header className="drag-handle__custom cursor-move style={{ touchAction: 'none' }} relative flex items-center mb-1 justify-between px-3 py-2 shadow-lg">
         <span className="absolute left-0 top-0 h-full w-[6px] rounded-l-md bg-green-600" />
         <div className="flex items-center gap-2">
           <span className="rounded-full bg-green-100 p-[6px] text-green-600">
@@ -207,4 +207,4 @@ const TextButtonsNode = ({ data }) => {
   );
 };
 
-export default TextButtonsNode;
+export default memo(TextButtonsNode);

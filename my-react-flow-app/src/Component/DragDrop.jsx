@@ -112,6 +112,7 @@ const CustomNodeFlow = () => {
         type: 'customInput',
         position: { x: 100, y: 100 },
         data: { onDelete: () => deleteNodeById('1') },
+        dragHandle: '.drag-handle__custom',
       },
     ]);
   }, []);
@@ -126,7 +127,7 @@ const CustomNodeFlow = () => {
             animated: true,
             data: {
               onDelete: (id) =>
-                setEdges((es) => es.filter((e) => e.id !== id)),
+              setEdges((es) => es.filter((e) => e.id !== id)),
             },
           },
           eds
@@ -158,6 +159,7 @@ const CustomNodeFlow = () => {
         type,
         position,
         data: { onDelete: () => deleteNodeById(id) },
+        dragHandle: '.drag-handle__custom',
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -178,7 +180,6 @@ const CustomNodeFlow = () => {
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
-          snapToGrid
           snapGrid={snapGrid}
           defaultViewport={defaultViewport}
         >

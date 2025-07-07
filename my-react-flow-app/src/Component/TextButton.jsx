@@ -146,12 +146,12 @@ const TextButtonsNode = ({ data }) => {
               placeholder="Body Text"
               className="h-24 w-full resize-none outline-none placeholder-gray-400"
             />
-            <div className="flex items-center gap-3 text-xs text-gray-500">
+            <div className="flex items-center gap-3 text-xs text-gray-500 cursor-pointer">
               <FaBold />
               <FaItalic />
               <FaStrikethrough />
               <FaRegSmile />
-              <span className="ml-auto">(x)</span>
+              <span className="ml-auto cursor-pointer">(x)</span>
             </div>
           </div>
 

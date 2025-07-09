@@ -11,9 +11,9 @@ import {
 import { FaTimes } from 'react-icons/fa';
 
 import '@xyflow/react/dist/style.css';
-import FlowStart from './FlowStart';
+import FlowStart from './flow/card/FlowStart';
 import Sidebar from './Sidebar';
-import TextButton from './TextButton';
+import TextButton from './flow/card/TextButton';
 
 const nodeTypes = {
   customInput: FlowStart,

@@ -110,7 +110,7 @@ const CustomNodeFlow = () => {
       {
         id: '1',
         type: 'customInput',
-        position: { x: 100, y: 100 },
+        position: { x: 40, y: 60 },
         data: { onDelete: () => deleteNodeById('1') },
         dragHandle: '.drag-handle__custom',
       },

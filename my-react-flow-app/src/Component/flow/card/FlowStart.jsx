@@ -1,6 +1,6 @@
 import React, { memo, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { FaRocket, FaTimes } from 'react-icons/fa';
+import { FaRocket, FaTimes ,FaArrowRight } from 'react-icons/fa';
 
 const FlowStartNode = () => {
   const [keywords, setKeywords] = useState(['Hii', 'Hi', 'Hello']);
@@ -37,9 +37,11 @@ const FlowStartNode = () => {
             Fow Start
           </span>
         </div>
-        <button className="text-green-600 hover:text-red-500 cursor-pointer">
-          <FaTimes className="text-[15px]" />
+        <button className="flex items-center gap-1 text-green-600 hover:text-red-500 cursor-pointer">
+      
+          <FaArrowRight className="text-[15px]" />
         </button>
+
       </header>
 
       {/* Content */}

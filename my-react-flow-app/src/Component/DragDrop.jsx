@@ -14,10 +14,12 @@ import '@xyflow/react/dist/style.css';
 import FlowStart from './flow/card/FlowStart';
 import Sidebar from './Sidebar';
 import TextButton from './flow/card/TextButton';
+import MediaButton from './flow/card/MediaButton';
 
 const nodeTypes = {
   customInput: FlowStart,
   textButton: TextButton,
+  mediaButton: MediaButton,
 };
 
 const snapGrid = [20, 20];

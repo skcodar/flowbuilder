@@ -247,7 +247,7 @@ const TextButtonsNode = ({ data }) => {
 
             {showDropdown && (
               <div
-                className="absolute z-10 mt-1 w-full rounded-md border border-[#E4DFDF] bg-white shadow overflow-hidden"
+                className="absolute bottom-full mb-1 w-full rounded-md border border-[#E4DFDF] bg-white shadow overflow-hidden z-10"
                 onMouseDown={(e) => e.preventDefault()}
               >
                 <button

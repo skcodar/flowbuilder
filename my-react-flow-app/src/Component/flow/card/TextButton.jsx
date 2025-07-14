@@ -1,7 +1,6 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import {
-  FaRocket,
   FaTimes,
   FaBold,
   FaItalic,
@@ -14,93 +13,119 @@ import {
   FaThLarge,
 } from "react-icons/fa";
 import CardHeader from "../component/CardHeader";
+import useCommanFunctions from "../component/useCommanFunction";
 
 // Emoji list for emoji picker popup
-const emojiList = ["😀", "😂", "😍", "😎", "👍", "🔥", "🎉", "😢", "🥳", "💡"];
+// const emojiList = ["😀", "😂", "😍", "😎", "👍", "🔥", "🎉", "😢", "🥳", "💡"];
 
 const TextButtonsNode = ({ data }) => {
-  // Dropdown and emoji picker visibility states
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  // Stores dynamic content blocks like quick reply, phone, etc.
-  const [contentBlocks, setContentBlocks] = useState([]);
+  const {
+    showDropdown,
+    setShowDropdown,
+    showEmojiPicker,
+    setShowEmojiPicker,
+    contentBlocks,
+    addBlock,
+    removeBlock,
+    isFocused,
+    setIsFocused,
+    html,
+    setHtml,
+    characterCount,
+    setCharacterCount,
+    editorRef,
+    dropdownRef,
+    handleInput,
+    execFormat,
+    insertEmoji,
+    MAX_CHARS,
+    emojiList,
+  } = useCommanFunctions();
 
-  // Input focus state and editable HTML content
-  const [isFocused, setIsFocused] = useState(false);
-  const [html, setHtml] = useState("");
 
-  // Character count state (fixes over-counting bug)
-  const [characterCount, setCharacterCount] = useState(0);
+  // // Dropdown and emoji picker visibility states
+  // const [showDropdown, setShowDropdown] = useState(false);
+  // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-  // Reference to contentEditable div
-  const editorRef = useRef(null);
+  // // Stores dynamic content blocks like quick reply, phone, etc.
+  // const [contentBlocks, setContentBlocks] = useState([]);
 
-  // Maximum allowed characters
-  const MAX_CHARS = 1024;
+  // // Input focus state and editable HTML content
+  // const [isFocused, setIsFocused] = useState(false);
+  // const [html, setHtml] = useState("");
 
-  // Add content block and close dropdown
-  const addBlock = (type) => {
-    if (type === "phone" && contentBlocks.some((block) => block.type === "phone")) return;
-    if (type === "copy" && contentBlocks.some((block) => block.type === "copy")) return;
-    setContentBlocks((prev) => [...prev, { type, id: Date.now() }]);
-    setShowDropdown(false);
-  };
+  // // Character count state (fixes over-counting bug)
+  // const [characterCount, setCharacterCount] = useState(0);
 
-  // Remove block by ID
-  const removeBlock = (id) => {
-    setContentBlocks((prev) => prev.filter((block) => block.id !== id));
-  };
+  // // Reference to contentEditable div
+  // const editorRef = useRef(null);
 
-  // Handle text input and update character count
-  const handleInput = (e) => {
-    const newText = e.target.innerText.replace(/\n/g, '');
-    if (newText.length <= MAX_CHARS) {
-      setHtml(e.target.innerHTML);
-      setCharacterCount(newText.length); // ✅ Update character count only on input
-    } else {
-      e.target.innerHTML = html;
-      placeCaretAtEnd(editorRef.current);
-    }
-  };
+  // // Maximum allowed characters
+  // const MAX_CHARS = 1024;
 
-  // Place caret at end of editor
-  const placeCaretAtEnd = (el) => {
-    if (!el) return;
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.selectNodeContents(el);
-    range.collapse(false);
-    sel.removeAllRanges();
-    sel.addRange(range);
-    el.focus();
-  };
+  // // Add content block and close dropdown
+  // const addBlock = (type) => {
+  //   if (type === "phone" && contentBlocks.some((block) => block.type === "phone")) return;
+  //   if (type === "copy" && contentBlocks.some((block) => block.type === "copy")) return;
+  //   setContentBlocks((prev) => [...prev, { type, id: Date.now() }]);
+  //   setShowDropdown(false);
+  // };
 
-  // Rich text formatting
-  const execFormat = (command) => {
-    document.execCommand(command);
-    editorRef.current?.focus();
-  };
+  // // Remove block by ID
+  // const removeBlock = (id) => {
+  //   setContentBlocks((prev) => prev.filter((block) => block.id !== id));
+  // };
 
-  // Insert emoji at cursor and update count
-  const insertEmoji = (emoji) => {
-    const editor = editorRef.current;
-    if (!editor) return;
-    const sel = window.getSelection();
-    if (!sel || sel.rangeCount === 0 || !editor.contains(sel.anchorNode)) return;
+  // // Handle text input and update character count
+  // const handleInput = (e) => {
+  //   const newText = e.target.innerText.replace(/\n/g, '');
+  //   if (newText.length <= MAX_CHARS) {
+  //     setHtml(e.target.innerHTML);
+  //     setCharacterCount(newText.length); // ✅ Update character count only on input
+  //   } else {
+  //     e.target.innerHTML = html;
+  //     placeCaretAtEnd(editorRef.current);
+  //   }
+  // };
 
-    const range = sel.getRangeAt(0);
-    range.deleteContents();
-    range.insertNode(document.createTextNode(emoji));
-    range.collapse(false);
-    sel.removeAllRanges();
-    sel.addRange(range);
+  // // Place caret at end of editor
+  // const placeCaretAtEnd = (el) => {
+  //   if (!el) return;
+  //   const range = document.createRange();
+  //   const sel = window.getSelection();
+  //   range.selectNodeContents(el);
+  //   range.collapse(false);
+  //   sel.removeAllRanges();
+  //   sel.addRange(range);
+  //   el.focus();
+  // };
 
-    setHtml(editor.innerHTML);
-    setCharacterCount(editor.innerText.replace(/\n/g, '').length); // ✅ Update count on emoji
-    setShowEmojiPicker(false);
-    editor.focus();
-  };
+  // // Rich text formatting
+  // const execFormat = (command) => {
+  //   document.execCommand(command);
+  //   editorRef.current?.focus();
+  // };
+
+  // // Insert emoji at cursor and update count
+  // const insertEmoji = (emoji) => {
+  //   const editor = editorRef.current;
+  //   if (!editor) return;
+  //   const sel = window.getSelection();
+  //   if (!sel || sel.rangeCount === 0 || !editor.contains(sel.anchorNode)) return;
+
+  //   const range = sel.getRangeAt(0);
+  //   range.deleteContents();
+  //   range.insertNode(document.createTextNode(emoji));
+  //   range.collapse(false);
+  //   sel.removeAllRanges();
+  //   sel.addRange(range);
+
+  //   setHtml(editor.innerHTML);
+  //   setCharacterCount(editor.innerText.replace(/\n/g, '').length); // ✅ Update count on emoji
+  //   setShowEmojiPicker(false);
+  //   editor.focus();
+  // };
 
   // Render dynamic content block
   const renderBlock = (block) => {
@@ -166,9 +191,9 @@ const TextButtonsNode = ({ data }) => {
     <div className="relative w-[260px] rounded-md border border-gray-200 bg-white shadow-lg text-[13px]">
       {/* Handle for connection (left) */}
       <Handle type="target" position={Position.Left} className="!w-3 !h-3 !bg-[#E4DFDF]" />
-      
-    {/* Header */}
-    < CardHeader data={data} name="Text Button"/>
+
+      {/* Header */}
+      < CardHeader data={data} name="Text Button" />
 
 
       {/* Body Content */}
@@ -183,9 +208,8 @@ const TextButtonsNode = ({ data }) => {
               onInput={handleInput}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              className={`min-h-[96px] w-full rounded p-1 text-sm outline-none ${
-                html === "" && !isFocused ? "text-gray-400" : "text-black"
-              }`}
+              className={`min-h-[96px] w-full rounded p-1 text-sm outline-none ${html === "" && !isFocused ? "text-gray-400" : "text-black"
+                }`}
               style={{ whiteSpace: "pre-wrap", cursor: "text" }}
             >
               {html === "" && !isFocused ? "Type something..." : null}
@@ -238,8 +262,9 @@ const TextButtonsNode = ({ data }) => {
 
             {showDropdown && (
               <div
+                ref={dropdownRef}
                 className="absolute left-full top-0 ml-2 mt-[-145px] w-48 rounded-md border border-[#E4DFDF] bg-white shadow overflow-hidden z-10"
-                onMouseDown={(e) => e.preventDefault()}
+                // onMouseDown={(e) => e.preventDefault()}
               >
                 <button
                   onClick={() => addBlock("quick")}
@@ -251,9 +276,8 @@ const TextButtonsNode = ({ data }) => {
                 <button
                   onClick={() => addBlock("copy")}
                   disabled={hasCopyBlock}
-                  className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-sm border-b border-[#E4DFDF] ${
-                    hasCopyBlock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
-                  }`}
+                  className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-sm border-b border-[#E4DFDF] ${hasCopyBlock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
+                    }`}
                 >
                   <FaRegClone className="text-sm mr-3" />
                   Copy Code
@@ -268,9 +292,8 @@ const TextButtonsNode = ({ data }) => {
                 <button
                   onClick={() => addBlock("phone")}
                   disabled={hasPhoneBlock}
-                  className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-sm ${
-                    hasPhoneBlock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
-                  }`}
+                  className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-sm ${hasPhoneBlock ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "hover:bg-gray-100"
+                    }`}
                 >
                   <FaPhoneAlt className="text-sm mr-3" />
                   Ph. Number
@@ -283,5 +306,4 @@ const TextButtonsNode = ({ data }) => {
     </div>
   );
 };
-
 export default memo(TextButtonsNode);

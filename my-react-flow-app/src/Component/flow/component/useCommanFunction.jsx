@@ -16,11 +16,27 @@ const useCommanFunctions = () => {
   const [characterCount, setCharacterCount] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [sections, setSections] = useState([]);
+  const [isBoldActive, setIsBoldActive] = useState(false);
+  const [isItalicActive, setIsItalicActive] = useState(false);
+
 
   // Refs
   const fileInputRef = useRef(null);
   const editorRef = useRef(null);
   const dropdownRef = useRef(null);
+// Bolde
+useEffect(() => {
+  const checkFormatState = () => {
+    setIsBoldActive(document.queryCommandState("bold"));
+    setIsItalicActive(document.queryCommandState("italic"));
+  };
+
+  document.addEventListener("selectionchange", checkFormatState);
+  return () => {
+    document.removeEventListener("selectionchange", checkFormatState);
+  };
+}, []);
+
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -205,6 +221,10 @@ const removeSection = (sectionIndex) => {
     updateRow,
     updateSectionTitle,
     removeRow,
+    isBoldActive, 
+    setIsBoldActive,
+    isItalicActive, 
+    setIsItalicActive,
   };
 };
 

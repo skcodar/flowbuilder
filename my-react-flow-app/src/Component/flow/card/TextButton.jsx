@@ -40,6 +40,10 @@ const TextButtonsNode = ({ data }) => {
     insertEmoji,
     MAX_CHARS,
     emojiList,
+    isBoldActive, 
+    setIsBoldActive,
+    isItalicActive, 
+    setIsItalicActive,
   } = useCommanFunctions();
 
 
@@ -135,8 +139,22 @@ const TextButtonsNode = ({ data }) => {
 
             {/* Formatting + Emoji + Character Count */}
             <div className="flex items-center gap-3 text-xs text-green-800 cursor-pointer relative">
-              <FaBold onClick={() => execFormat("bold")} className="hover:text-black cursor-pointer" />
-              <FaItalic onClick={() => execFormat("italic")} className="hover:text-black cursor-pointer" />
+              <FaBold
+                onClick={() => {
+                  document.execCommand("bold");
+                  setIsBoldActive(prev => !prev);
+                }}
+                className={`cursor-pointer ${isBoldActive ? "bg-green-200 text-black" : "hover:text-black"}`}
+                style={{ borderRadius: "4px", padding: "2px",fontSize:'medium' }}
+              />
+              <FaItalic
+              onClick={() => {
+                document.execCommand("italic");
+                setIsItalicActive(prev => !prev);
+              }}
+              className={`cursor-pointer ${isItalicActive ? "bg-green-200 text-black" : "hover:text-black"}`}
+              style={{ borderRadius: "4px", padding: "2px",fontSize:'medium' }}
+            />
               <FaStrikethrough />
               <FaRegSmile onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="cursor-pointer hover:text-black" />
 

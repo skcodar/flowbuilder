@@ -7,6 +7,7 @@ import {
     FaStrikethrough,
     FaRegSmile,
     FaThLarge,
+    FaPlusSquare,
 } from "react-icons/fa";
 import CardHeader from "../component/CardHeader";
 import useCommanFunctions from "../component/useCommanFunction";
@@ -185,8 +186,8 @@ const List = ({ data }) => {
                         onClick={addSection}
                         className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 py-2 text-[12px] font-medium text-gray-700 cursor-pointer hover:bg-gray-300"
                     >
-                        <FaThLarge className="text-[12px]" />
-                        Add Content
+                        <FaPlusSquare className="text-[14px]" />
+                        Add Section
                     </button>
                 </div>
             </div>

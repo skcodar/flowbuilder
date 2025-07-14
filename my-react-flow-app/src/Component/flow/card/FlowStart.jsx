@@ -76,7 +76,7 @@ const FlowStartNode = () => {
           />
 
           {/* Choose Template Button */}
-          <button className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 mt-2 py-2 text-[12px] font-medium text-gray-700 cursor-pointer hover:bg-gray-300">
+          <button className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 mt-2 py-2 text-[14px] font-medium text-gray-700 cursor-pointer hover:bg-gray-300">
             Choose template
           </button>
         </div>

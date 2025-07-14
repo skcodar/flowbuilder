@@ -174,7 +174,7 @@ const TextButtonsNode = ({ data }) => {
               className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 py-2 text-[12px] font-medium text-gray-700 cursor-pointer hover:bg-gray-300"
               onClick={() => setShowDropdown(!showDropdown)}
             >
-              <FaThLarge className="text-[12px]" />
+              <FaThLarge className="text-[14px]" />
               Add Content
             </button>
 

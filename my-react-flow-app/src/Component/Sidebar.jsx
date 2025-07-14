@@ -8,6 +8,7 @@ export default function Sidebar() {
       
       <SidebarButton name="Text +  Button"  cardName="textButton"/>
       <SidebarButton name="Media + Button" cardName="mediaButton"/>
+      <SidebarButton name="List" cardName="list"/>
     </aside>
   );
 }

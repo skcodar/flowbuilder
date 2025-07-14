@@ -1,4 +1,4 @@
-import React, { memo} from "react";
+import React, { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import {
     FaTimes,
@@ -17,31 +17,34 @@ import useCommanFunctions from "../component/useCommanFunction";
 
 const MediaButton = ({ data }) => {
     const {
-    showDropdown,
-    setShowDropdown,
-    showEmojiPicker,
-    setShowEmojiPicker,
-    contentBlocks,
-    addBlock,
-    removeBlock,
-    isFocused,
-    setIsFocused,
-    html,
-    setHtml,
-    characterCount,
-    setCharacterCount,
-    fileInputRef,
-    editorRef,
-    dropdownRef,
-    handleInput,
-    execFormat,
-    insertEmoji,
-    imagePreview,
-    setImagePreview,
-    MAX_CHARS,
-    emojiList,
-  } = useCommanFunctions();
-    
+        showDropdown,
+        setShowDropdown,
+        showEmojiPicker,
+        setShowEmojiPicker,
+        contentBlocks,
+        addBlock,
+        removeBlock,
+        isFocused,
+        setIsFocused,
+        html,
+        setHtml,
+        characterCount,
+        setCharacterCount,
+        fileInputRef,
+        editorRef,
+        dropdownRef,
+        handleInput,
+        execFormat,
+        insertEmoji,
+        uploadedFiles,
+        setUploadedFiles,
+        MAX_CHARS,
+        emojiList,
+    } = useCommanFunctions();
+
+    // In your component state (e.g. inside useCommanFunctions or local state)
+
+
     // const [showDropdown, setShowDropdown] = useState(false);
     // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     // const [contentBlocks, setContentBlocks] = useState([]);
@@ -189,61 +192,88 @@ const MediaButton = ({ data }) => {
 
             <CardHeader data={data} name="Media Button" />
 
-            {/* 📷 Upload Area */}
-            <div className="p-2 relative h-[130px] w-full">
-                {imagePreview && (
-                    <button
-                        onClick={() => {
-                            setImagePreview(null);
-                            if (fileInputRef.current) {
-                                fileInputRef.current.value = null;
-                            }
-                        }}
-                        className="absolute top-2 right-2 bg-white rounded-full p-[4px] text-gray-700 cursor-pointer hover:text-red-500 shadow-md z-10"
-                    >
-                        <FaTimes size={12} />
-                    </button>
-                )}
-                <label className="block cursor-pointer h-full w-full">
+            {/* 📦 Upload Area (Multiple File Uploads) */}
+            <div className="p-2">
+                <label className="flex flex-col items-center justify-center gap-2 h-[60px] w-full rounded-md bg-[#EDF5F2] cursor-pointer border-2 border-dashed border-green-300 hover:bg-green-50 transition text-center">
                     <input
                         type="file"
-                        accept="image/*"
+                        multiple
                         ref={fileInputRef}
                         onChange={(e) => {
-                            const file = e.target.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.onload = () => {
-                                    setImagePreview(reader.result);
-                                    e.target.value = null; // ✅ allow same file to be selected again
-                                };
-                                reader.readAsDataURL(file);
-                            }
+                            const files = Array.from(e.target.files);
+                            const newFiles = files.map((file) => ({
+                                file,
+                                url: URL.createObjectURL(file),
+                            }));
+                            setUploadedFiles((prev) => [...prev, ...newFiles]);
+                            e.target.value = null; // reset input so same file can be selected again
                         }}
                         className="hidden"
                     />
-                    <div className="h-full w-full flex items-center justify-center rounded-md bg-yellow-300 hover:bg-yellow-200 transition">
-                        {imagePreview ? (
-                            <img src={imagePreview} alt="Uploaded" className="h-full w-full object-cover rounded-md" />
-                        ) : (
+                    <div className="flex flex-col items-center">
+                        <div className="w-20 h-20 flex flex-col items-center justify-center text-center">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                fill="white"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="white"
-                                className="w-10 h-10"
+                                viewBox="0 0 64 64"
+                                fill="none"
+                                stroke="green"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="w-7 h-7"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M3 16.5V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25v13.5A2.25 2.25 0 0118.75 21H6a3 3 0 01-3-3v-1.5zm0 0l6.5-6.75 4.75 5.25L21 7.5"
-                                />
+                                <path d="M3 20V52C3 54.2091 4.79086 56 7 56H57C59.2091 56 61 54.2091 61 52V20C61 17.7909 59.2091 16 57 16H28L24 12H7C4.79086 12 3 13.7909 3 16V20Z" />
+                                <path d="M32 44V28" />
+                                <path d="M24 36L32 28L40 36" />
                             </svg>
-                        )}
+                            <p className="text-green-700 text-xs font-medium">Upload file</p>
+                        </div>
                     </div>
                 </label>
+
+                {/* Uploaded files list */}
+                {uploadedFiles.map((item, index) => (
+                    <div
+                        key={index}
+                        className="relative mt-2 rounded-md border border-gray-200 bg-white p-3"
+                    >
+                        <button
+                            onClick={() => {
+                                setUploadedFiles((prev) =>
+                                    prev.filter((_, i) => i !== index)
+                                );
+                            }}
+                            className="absolute top-2 right-2 bg-white rounded-full p-1 text-gray-700 cursor-pointer hover:text-red-500 shadow"
+                        >
+                            <FaTimes size={12} />
+                        </button>
+
+                        {item.file.type.startsWith("image/") ? (
+                            <img
+                                src={item.url}
+                                alt="preview"
+                                className="w-full h-36 object-cover rounded-md"
+                            />
+                        ) : (
+                            <a
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 hover:underline"
+                            >
+                                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 text-sm">
+                                    📎
+                                </div>
+                                <div className="text-sm text-blue-800 truncate max-w-[180px]">
+                                    {item.file.name}
+                                </div>
+                            </a>
+                        )}
+                    </div>
+                ))}
             </div>
+
+
 
             {/* ✏️ Body */}
             <div className="p-2">
@@ -262,7 +292,7 @@ const MediaButton = ({ data }) => {
                             {html === "" && !isFocused ? "Type something..." : null}
                         </div>
 
-                        <div className="flex items-center gap-3 text-xs text-gray-500 cursor-pointer relative">
+                        <div className="flex items-center gap-3 text-xs text-green-800 cursor-pointer relative">
                             <FaBold onClick={() => execFormat("bold")} className="hover:text-black cursor-pointer" />
                             <FaItalic onClick={() => execFormat("italic")} className="hover:text-black cursor-pointer" />
                             <FaStrikethrough />

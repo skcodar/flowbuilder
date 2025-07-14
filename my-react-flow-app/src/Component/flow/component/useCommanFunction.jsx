@@ -15,7 +15,7 @@ const useCommanFunctions = () => {
   const [isFocused, setIsFocused] = useState(false); // Tracks focus state of editor
   const [html, setHtml] = useState(""); // Stores current HTML content of editor
   const [characterCount, setCharacterCount] = useState(0); // Tracks character count of editor content
-  const [imagePreview, setImagePreview] = useState(null); // Stores uploaded image preview
+  const [uploadedFiles, setUploadedFiles] = useState([]); // Stores uploaded image preview
 
   // Refs to DOM elements
   const fileInputRef = useRef(null); // File input for image uploads
@@ -136,8 +136,8 @@ const useCommanFunctions = () => {
     handleInput,
     execFormat,
     insertEmoji,
-    imagePreview,
-    setImagePreview,
+    uploadedFiles,
+    setUploadedFiles,
     MAX_CHARS,
     emojiList,
   };

@@ -20,7 +20,7 @@ export default function CardHeader({data , name}) {
                 </span>
                 <span className="text-[16px] font-semibold text-green-700">{name}</span>
             </div>
-            <button onClick={data?.onDelete} className="text-green-600 transition hover:text-red-500 cursor-pointer">
+            <button onClick={data?.onDelete} className="text-green-800 transition hover:text-red-500 cursor-pointer">
                 <FaTimes className="text-[15px]" />
             </button>
         </header>

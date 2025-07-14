@@ -15,11 +15,13 @@ import FlowStart from './flow/card/FlowStart';
 import Sidebar from './Sidebar';
 import TextButton from './flow/card/TextButton';
 import MediaButton from './flow/card/MediaButton';
+import List from './flow/card/List';
 
 const nodeTypes = {
   customInput: FlowStart,
   textButton: TextButton,
   mediaButton: MediaButton,
+  list: List,
 };
 
 const snapGrid = [20, 20];

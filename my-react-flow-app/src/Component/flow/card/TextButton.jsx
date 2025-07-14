@@ -15,8 +15,7 @@ import {
 import CardHeader from "../component/CardHeader";
 import useCommanFunctions from "../component/useCommanFunction";
 
-// Emoji list for emoji picker popup
-// const emojiList = ["😀", "😂", "😍", "😎", "👍", "🔥", "🎉", "😢", "🥳", "💡"];
+
 
 const TextButtonsNode = ({ data }) => {
 
@@ -44,88 +43,7 @@ const TextButtonsNode = ({ data }) => {
   } = useCommanFunctions();
 
 
-  // // Dropdown and emoji picker visibility states
-  // const [showDropdown, setShowDropdown] = useState(false);
-  // const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
-  // // Stores dynamic content blocks like quick reply, phone, etc.
-  // const [contentBlocks, setContentBlocks] = useState([]);
-
-  // // Input focus state and editable HTML content
-  // const [isFocused, setIsFocused] = useState(false);
-  // const [html, setHtml] = useState("");
-
-  // // Character count state (fixes over-counting bug)
-  // const [characterCount, setCharacterCount] = useState(0);
-
-  // // Reference to contentEditable div
-  // const editorRef = useRef(null);
-
-  // // Maximum allowed characters
-  // const MAX_CHARS = 1024;
-
-  // // Add content block and close dropdown
-  // const addBlock = (type) => {
-  //   if (type === "phone" && contentBlocks.some((block) => block.type === "phone")) return;
-  //   if (type === "copy" && contentBlocks.some((block) => block.type === "copy")) return;
-  //   setContentBlocks((prev) => [...prev, { type, id: Date.now() }]);
-  //   setShowDropdown(false);
-  // };
-
-  // // Remove block by ID
-  // const removeBlock = (id) => {
-  //   setContentBlocks((prev) => prev.filter((block) => block.id !== id));
-  // };
-
-  // // Handle text input and update character count
-  // const handleInput = (e) => {
-  //   const newText = e.target.innerText.replace(/\n/g, '');
-  //   if (newText.length <= MAX_CHARS) {
-  //     setHtml(e.target.innerHTML);
-  //     setCharacterCount(newText.length); // ✅ Update character count only on input
-  //   } else {
-  //     e.target.innerHTML = html;
-  //     placeCaretAtEnd(editorRef.current);
-  //   }
-  // };
-
-  // // Place caret at end of editor
-  // const placeCaretAtEnd = (el) => {
-  //   if (!el) return;
-  //   const range = document.createRange();
-  //   const sel = window.getSelection();
-  //   range.selectNodeContents(el);
-  //   range.collapse(false);
-  //   sel.removeAllRanges();
-  //   sel.addRange(range);
-  //   el.focus();
-  // };
-
-  // // Rich text formatting
-  // const execFormat = (command) => {
-  //   document.execCommand(command);
-  //   editorRef.current?.focus();
-  // };
-
-  // // Insert emoji at cursor and update count
-  // const insertEmoji = (emoji) => {
-  //   const editor = editorRef.current;
-  //   if (!editor) return;
-  //   const sel = window.getSelection();
-  //   if (!sel || sel.rangeCount === 0 || !editor.contains(sel.anchorNode)) return;
-
-  //   const range = sel.getRangeAt(0);
-  //   range.deleteContents();
-  //   range.insertNode(document.createTextNode(emoji));
-  //   range.collapse(false);
-  //   sel.removeAllRanges();
-  //   sel.addRange(range);
-
-  //   setHtml(editor.innerHTML);
-  //   setCharacterCount(editor.innerText.replace(/\n/g, '').length); // ✅ Update count on emoji
-  //   setShowEmojiPicker(false);
-  //   editor.focus();
-  // };
+  
 
   // Render dynamic content block
   const renderBlock = (block) => {
@@ -216,7 +134,7 @@ const TextButtonsNode = ({ data }) => {
             </div>
 
             {/* Formatting + Emoji + Character Count */}
-            <div className="flex items-center gap-3 text-xs text-gray-500 cursor-pointer relative">
+            <div className="flex items-center gap-3 text-xs text-green-800 cursor-pointer relative">
               <FaBold onClick={() => execFormat("bold")} className="hover:text-black cursor-pointer" />
               <FaItalic onClick={() => execFormat("italic")} className="hover:text-black cursor-pointer" />
               <FaStrikethrough />

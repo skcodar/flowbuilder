@@ -52,11 +52,11 @@ const FlowStartNode = () => {
             {keywords.map((word, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between border border-gray-300 text-green-800 rounded px-2 py-1 text-[12px] bg-white"
+                className="w-full flex items-center justify-between mb-2 rounded border border-gray-300 px-2 py-1 text-sm bg-white"
               >
                 <span>{word}</span>
                 <button
-                  className="hover:text-red-600 cursor-pointer"
+                  className="hover:text-red-600 text-green-800 cursor-pointer"
                   onClick={() => handleRemove(index)}
                 >
                   <FaTimes className="text-[13px]" />
@@ -72,7 +72,7 @@ const FlowStartNode = () => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type your keyword"
-            className="w-full border border-gray-300 rounded px-2 py-1 text-[12px] placeholder-gray-500 text-green-700 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
+            className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
           />
 
           {/* Choose Template Button */}

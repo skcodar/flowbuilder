@@ -60,7 +60,7 @@ const List = ({ data }) => {
             <div className="p-2">
                 <div className="bg-[#EBF5F3] p-2">
                     {/* Header */}
-                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-2 px-2 py-1">
+                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-2 px-2 py-2">
                        <input type="text" placeholder="Header" className="flex-1  outline-none text-sm" />
                     </div>
 
@@ -121,10 +121,10 @@ const List = ({ data }) => {
                         </div>
                     </div>
 
-                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-2 px-2 py-1">
+                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-2 px-2 py-2">
                        <input type="text" placeholder="Footer" className="flex-1  outline-none text-sm" />
                     </div>  
-                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-4 px-2 py-1">
+                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-4 px-2 py-2">
                        <input type="text" placeholder="Button Lable" className="flex-1  outline-none text-sm" />
                     </div>  
                       

@@ -72,7 +72,7 @@ const FlowStartNode = () => {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type your keyword"
-            className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
+            className="w-full mb-2 rounded border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
           />
 
           {/* Choose Template Button */}

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import {
     FaTimes,
@@ -35,6 +35,22 @@ const List = ({ data }) => {
         removeSection,
     } = useCommanFunctions();
 
+     const [isBoldActive, setIsBoldActive] = useState(false);
+        const [isItalicActive, setIsItalicActive] = useState(false);
+    
+        //  Show Active On Bolde And italic
+        useEffect(() => {
+            const checkFormatState = () => {
+                setIsBoldActive(document.queryCommandState("bold"));
+                setIsItalicActive(document.queryCommandState("italic"));
+            };
+    
+            document.addEventListener("selectionchange", checkFormatState);
+            return () => {
+                document.removeEventListener("selectionchange", checkFormatState);
+            };
+        }, []);
+
     return (
         <div className="relative w-[260px] rounded-md border border-gray-200 bg-white shadow-lg text-[13px]">
             <Handle type="target" position={Position.Left} className="!w-3 !h-3 !bg-[#E4DFDF]" />
@@ -44,11 +60,9 @@ const List = ({ data }) => {
             <div className="p-2">
                 <div className="bg-[#EBF5F3] p-2">
                     {/* Header */}
-                    <input
-                        type="text"
-                        placeholder="Header"
-                        className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
-                    />
+                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-2 px-2 py-1">
+                       <input type="text" placeholder="Header" className="flex-1  outline-none text-sm" />
+                    </div>
 
                     {/* Editor */}
                     <div className="space-y-1 mb-2 rounded-md border border-gray-300 bg-white p-2">
@@ -66,8 +80,22 @@ const List = ({ data }) => {
                         </div>
 
                         <div className="flex items-center gap-3 text-xs text-green-800 cursor-pointer relative">
-                            <FaBold onClick={() => execFormat("bold")} className="hover:text-black cursor-pointer" />
-                            <FaItalic onClick={() => execFormat("italic")} className="hover:text-black cursor-pointer" />
+                             <FaBold
+                                onClick={() => {
+                                    document.execCommand("bold");
+                                    setIsBoldActive(prev => !prev);
+                                }}
+                                className={`cursor-pointer ${isBoldActive ? "bg-green-200 text-black" : "hover:text-black"}`}
+                                style={{ borderRadius: "4px", padding: "2px", fontSize: 'medium' }}
+                            />
+                            <FaItalic
+                                onClick={() => {
+                                    document.execCommand("italic");
+                                    setIsItalicActive(prev => !prev);
+                                }}
+                                className={`cursor-pointer ${isItalicActive ? "bg-green-200 text-black" : "hover:text-black"}`}
+                                style={{ borderRadius: "4px", padding: "2px", fontSize: 'medium' }}
+                            />
                             <FaStrikethrough />
                             <FaRegSmile onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="cursor-pointer hover:text-black" />
 
@@ -93,16 +121,13 @@ const List = ({ data }) => {
                         </div>
                     </div>
 
-                    <input
-                        type="text"
-                        placeholder="Footer"
-                        className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
-                    />   
-                    <input
-                        type="text"
-                        placeholder="Button Lable"
-                        className="w-full mb-[25px] rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
-                    />   
+                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-2 px-2 py-1">
+                       <input type="text" placeholder="Footer" className="flex-1  outline-none text-sm" />
+                    </div>  
+                    <div className="relative flex items-center rounded-md border border-gray-300  bg-white mb-4 px-2 py-1">
+                       <input type="text" placeholder="Button Lable" className="flex-1  outline-none text-sm" />
+                    </div>  
+                      
 
                     {/* Sections */}
                     {sections.map((section, sectionIndex) => (

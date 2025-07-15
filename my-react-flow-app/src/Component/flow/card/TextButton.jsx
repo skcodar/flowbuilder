@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo,useState,useEffect } from "react";
 import { Handle, Position } from "@xyflow/react";
 import {
   FaTimes,
@@ -40,12 +40,22 @@ const TextButtonsNode = ({ data }) => {
     insertEmoji,
     MAX_CHARS,
     emojiList,
-    isBoldActive, 
-    setIsBoldActive,
-    isItalicActive, 
-    setIsItalicActive,
-  } = useCommanFunctions();
 
+  } = useCommanFunctions();
+    const [isBoldActive, setIsBoldActive] = useState(false);
+    const [isItalicActive, setIsItalicActive] = useState(false);
+
+    useEffect(() => {
+      const checkFormatState = () => {
+        setIsBoldActive(document.queryCommandState("bold"));
+        setIsItalicActive(document.queryCommandState("italic"));
+      };
+    
+      document.addEventListener("selectionchange", checkFormatState);
+      return () => {
+        document.removeEventListener("selectionchange", checkFormatState);
+      };
+    }, []);
 
   
 

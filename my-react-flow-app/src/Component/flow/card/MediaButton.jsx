@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import {
     FaTimes,
@@ -40,11 +40,23 @@ const MediaButton = ({ data }) => {
         setUploadedFiles,
         MAX_CHARS,
         emojiList,
-        isBoldActive, 
-        setIsBoldActive,
-        isItalicActive, 
-        setIsItalicActive,
     } = useCommanFunctions();
+
+    const [isBoldActive, setIsBoldActive] = useState(false);
+    const [isItalicActive, setIsItalicActive] = useState(false);
+
+    //  Show Active On Bolde And italic
+    useEffect(() => {
+        const checkFormatState = () => {
+            setIsBoldActive(document.queryCommandState("bold"));
+            setIsItalicActive(document.queryCommandState("italic"));
+        };
+
+        document.addEventListener("selectionchange", checkFormatState);
+        return () => {
+            document.removeEventListener("selectionchange", checkFormatState);
+        };
+    }, []);
 
 
     const renderBlock = (block) => {
@@ -111,87 +123,99 @@ const MediaButton = ({ data }) => {
 
             <CardHeader data={data} name="Media Button" />
 
-            {/* 📦 Upload Area (Multiple File Uploads) */}
+            {/* 📦 Upload Area (Single File Upload) */}
             <div className="p-2">
-                <label className="flex flex-col items-center justify-center gap-2 h-[60px] w-full rounded-md bg-[#EDF5F2] cursor-pointer border-2 border-dashed border-green-300 hover:bg-green-50 transition text-center">
-                    <input
-                        type="file"
-                        multiple
-                        ref={fileInputRef}
-                        onChange={(e) => {
-                            const files = Array.from(e.target.files);
-                            const newFiles = files.map((file) => ({
-                                file,
-                                url: URL.createObjectURL(file),
-                            }));
-                            setUploadedFiles((prev) => [...prev, ...newFiles]);
-                            e.target.value = null; // reset input so same file can be selected again
-                        }}
-                        className="hidden"
-                    />
-                    <div className="flex flex-col items-center">
-                        <div className="w-20 h-20 flex flex-col items-center justify-center text-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 64 64"
-                                fill="none"
-                                stroke="green"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="w-7 h-7"
-                            >
-                                <path d="M3 20V52C3 54.2091 4.79086 56 7 56H57C59.2091 56 61 54.2091 61 52V20C61 17.7909 59.2091 16 57 16H28L24 12H7C4.79086 12 3 13.7909 3 16V20Z" />
-                                <path d="M32 44V28" />
-                                <path d="M24 36L32 28L40 36" />
-                            </svg>
-                            <p className="text-green-700 text-xs font-medium">Upload file</p>
-                        </div>
-                    </div>
-                </label>
+                {uploadedFiles.length === 0 ? (
+                    <label className="flex flex-col items-center justify-center gap-2 h-[60px] w-full rounded-md bg-[#EDF5F2] cursor-pointer border-2 border-dashed border-green-300 hover:bg-green-50 transition text-center">
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (!file) return;
 
-                {/* Uploaded files list */}
-                {uploadedFiles.map((item, index) => (
-                    <div
-                        key={index}
-                        className="relative mt-2 rounded-md border border-gray-200 bg-white p-3"
-                    >
-                        <button
-                            onClick={() => {
-                                setUploadedFiles((prev) =>
-                                    prev.filter((_, i) => i !== index)
+                                const fileKey = file.name + file.size;
+
+                                const alreadyExists = uploadedFiles.some(
+                                    (f) => f.file.name + f.file.size === fileKey
                                 );
-                            }}
-                            className="absolute top-2 right-2 bg-white rounded-full p-1 text-gray-700 cursor-pointer hover:text-red-500 shadow"
-                        >
-                            <FaTimes size={12} />
-                        </button>
 
-                        {item.file.type.startsWith("image/") ? (
+                                if (!alreadyExists) {
+                                    const newFile = {
+                                        file,
+                                        url: URL.createObjectURL(file),
+                                    };
+                                    setUploadedFiles([newFile]); // single file
+                                }
+
+                                e.target.value = null;
+                            }}
+                            className="hidden"
+                        />
+                        <div className="flex flex-col items-center">
+                            <div className="w-20 h-20 flex flex-col items-center justify-center text-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 64 64"
+                                    fill="none"
+                                    stroke="green"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="w-7 h-7"
+                                >
+                                    <path d="M3 20V52C3 54.2091 4.79086 56 7 56H57C59.2091 56 61 54.2091 61 52V20C61 17.7909 59.2091 16 57 16H28L24 12H7C4.79086 12 3 13.7909 3 16V20Z" />
+                                    <path d="M32 44V28" />
+                                    <path d="M24 36L32 28L40 36" />
+                                </svg>
+                                <p className="text-green-700 text-xs font-medium">Upload file</p>
+                            </div>
+                        </div>
+                    </label>
+                ) : (
+                    <div className="relative max-h-[120px] w-full rounded-md border border-gray-200 bg-white flex items-center justify-between overflow-hidden cursor-pointer">
+                        {uploadedFiles[0].file.type.startsWith("image/") ? (
                             <img
-                                src={item.url}
+                                src={uploadedFiles[0].url}
                                 alt="preview"
-                                className="w-full h-36 object-cover rounded-md"
+                                className="w-full h-full rounded-md object-cover"
                             />
                         ) : (
-                            <a
-                                href={item.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 hover:underline"
+                            <div
+                                className="h-[50px] flex items-center gap-2 p-2"
+                                onClick={() => {
+                                    const file = uploadedFiles[0];
+                                    if (!file) return;
+
+                                    if (file.file.type === "application/pdf") {
+                                        window.open(file.url, "_blank");
+                                    } else {
+                                        const a = document.createElement("a");
+                                        a.href = file.url;
+                                        a.download = file.file.name;
+                                        a.click();
+                                    }
+                                }}
                             >
                                 <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 text-sm">
                                     📎
                                 </div>
-                                <div className="text-sm text-blue-800 truncate max-w-[180px]">
-                                    {item.file.name}
+                                <div className="text-sm text-blue-800 underline truncate max-w-[180px]">
+                                    {uploadedFiles[0].file.name}
                                 </div>
-                            </a>
+                            </div>
                         )}
-                    </div>
-                ))}
-            </div>
 
+                        {/* ❌ Remove button */}
+                        <button
+                            onClick={() => setUploadedFiles([])}
+                            className="absolute top-1 right-1 bg-white rounded-full p-1 text-gray-700 hover:text-red-500 shadow cursor-pointer"
+                        >
+                            <FaTimes size={12} />
+                        </button>
+                    </div>
+                )}
+            </div>
 
 
             {/* ✏️ Body */}
@@ -218,15 +242,15 @@ const MediaButton = ({ data }) => {
                                     setIsBoldActive(prev => !prev);
                                 }}
                                 className={`cursor-pointer ${isBoldActive ? "bg-green-200 text-black" : "hover:text-black"}`}
-                                style={{ borderRadius: "4px", padding: "2px",fontSize:'medium' }}
+                                style={{ borderRadius: "4px", padding: "2px", fontSize: 'medium' }}
                             />
                             <FaItalic
                                 onClick={() => {
-                                document.execCommand("italic");
-                                setIsItalicActive(prev => !prev);
+                                    document.execCommand("italic");
+                                    setIsItalicActive(prev => !prev);
                                 }}
                                 className={`cursor-pointer ${isItalicActive ? "bg-green-200 text-black" : "hover:text-black"}`}
-                                style={{ borderRadius: "4px", padding: "2px",fontSize:'medium' }}
+                                style={{ borderRadius: "4px", padding: "2px", fontSize: 'medium' }}
                             />
                             <FaStrikethrough />
                             <FaRegSmile onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="cursor-pointer hover:text-black" />

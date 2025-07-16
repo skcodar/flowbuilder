@@ -159,7 +159,8 @@ const List = ({ data }) => {
 
                                             <div className="w-full relative">
                                                 <Handle
-                                                    id={`row-${row.id}-source`}
+                                                    
+                                                    id={`section-${sectionIndex}-row-${rowIndex}`}
                                                     type="source"
                                                     position={Position.Right}
                                                     className="!w-2 !h-2 !bg-[#E4DFDF] absolute mr-[-7px]"
@@ -169,7 +170,7 @@ const List = ({ data }) => {
                                                     placeholder="Title"
                                                     value={row.title}
                                                     onChange={(e) =>
-                                                        updateRow(sectionIndex, rowIndex, "title", e.target.value)
+                                                     updateRow(sectionIndex, rowIndex, "title", e.target.value)
                                                     }
                                                     className="w-full border-b border-gray-300 outline-none py-1 pr-4"
                                                 />

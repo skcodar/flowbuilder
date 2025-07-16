@@ -1,4 +1,4 @@
-import React, { memo,useState,useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import {
   FaTimes,
@@ -40,22 +40,24 @@ const TextButtonsNode = ({ data }) => {
     insertEmoji,
     MAX_CHARS,
     emojiList,
-
   } = useCommanFunctions();
-    const [isBoldActive, setIsBoldActive] = useState(false);
-    const [isItalicActive, setIsItalicActive] = useState(false);
 
-    useEffect(() => {
-      const checkFormatState = () => {
-        setIsBoldActive(document.queryCommandState("bold"));
-        setIsItalicActive(document.queryCommandState("italic"));
-      };
-    
-      document.addEventListener("selectionchange", checkFormatState);
-      return () => {
-        document.removeEventListener("selectionchange", checkFormatState);
-      };
-    }, []);
+  const [isBoldActive, setIsBoldActive] = useState(false);
+      const [isItalicActive, setIsItalicActive] = useState(false);
+  
+      //  Show Active On Bolde And italic
+      useEffect(() => {
+          const checkFormatState = () => {
+              setIsBoldActive(document.queryCommandState("bold"));
+              setIsItalicActive(document.queryCommandState("italic"));
+          };
+  
+          document.addEventListener("selectionchange", checkFormatState);
+          return () => {
+              document.removeEventListener("selectionchange", checkFormatState);
+          };
+      }, []);
+  
 
   
 
@@ -76,7 +78,7 @@ const TextButtonsNode = ({ data }) => {
             {closeIcon}
             <div>
               <input type="text" placeholder="Quick Reply" className="flex-1 outline-none text-sm" />
-              <Handle type="source" position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] !absolute top-[11px] !-translate-y-1/2" />
+              <Handle type="source" id={`quick-${block.id}`} position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] !absolute top-[11px] !-translate-y-1/2" />
             </div>
           </div>
         );

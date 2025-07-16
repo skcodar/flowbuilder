@@ -75,7 +75,7 @@ const MediaButton = ({ data }) => {
                         {closeIcon}
                         <div>
                             <input type="text" placeholder="Quick Reply" className="flex-1 outline-none text-sm" />
-                            <Handle type="source" position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] !absolute top-[11px] !-translate-y-1/2" />
+                            <Handle type="source"id={`quick-${block.id}`} position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] !absolute top-[11px] !-translate-y-1/2" />
                         </div>
                     </div>
                 );

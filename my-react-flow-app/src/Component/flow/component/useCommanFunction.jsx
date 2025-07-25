@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React,{ useEffect, useRef, useState } from "react";
 
 // Maximum allowed characters in the content editor
 const MAX_CHARS = 1024;
@@ -11,11 +11,9 @@ const useCommanFunctions = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [contentBlocks, setContentBlocks] = useState([]);
-  const [isFocused, setIsFocused] = useState(false);
   const [html, setHtml] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [sections, setSections] = useState([]);
 
 
 
@@ -23,6 +21,8 @@ const useCommanFunctions = () => {
   const fileInputRef = useRef(null);
   const editorRef = useRef(null);
   const dropdownRef = useRef(null);
+
+
 
 
   // Close dropdown on outside click
@@ -111,67 +111,8 @@ const useCommanFunctions = () => {
 // List Component
 
   // ➕ Add a new section
-  const addSection = () => {
-  setSections((prev) => [
-    ...prev,
-    {
-      id: Date.now(),
-      sectionTitle: "",
-      rows: [
-        {
-          id: 1, // Default row ID
-          title: "",
-          description: "",
-        },
-      ],
-    },
-  ]);
-};
+  
 
-  // ➕ Add row to specific section
-  const addRow = (sectionIndex) => {
-    const updated = [...sections];
-    updated[sectionIndex].rows.push({
-      id: Date.now(),
-      title: "",
-      description: "",
-    });
-    setSections(updated);
-  };
-
-  // ✏️ Update row field (title/description)
-  const updateRow = (sectionIndex, rowIndex, field, value) => {
-    const updated = [...sections];
-    updated[sectionIndex].rows[rowIndex][field] = value;
-    setSections(updated);
-  };
-
-  // ✏️ Update section title
-  const updateSectionTitle = (sectionIndex, value) => {
-    const updated = [...sections];
-    updated[sectionIndex].sectionTitle = value;
-    setSections(updated);
-  };
-
-  // ❌ Remove a row and remove its associated block
-  const removeRow = (sectionIndex, rowId) => {
-    setSections((prevSections) =>
-        prevSections.map((section, idx) =>
-            idx === sectionIndex
-                ? {
-                      ...section,
-                      rows: section.rows.filter((row) => row.id !== rowId),
-                  }
-                : section
-        )
-    );
-};
-
-// ❌ Remove section List Card
-
-const removeSection = (sectionIndex) => {
-  setSections((prev) => prev.filter((_, idx) => idx !== sectionIndex));
-};
 
 
   return {
@@ -183,8 +124,6 @@ const removeSection = (sectionIndex) => {
     contentBlocks,
     addBlock,
     removeBlock,
-    isFocused,
-    setIsFocused,
     html,
     setHtml,
     characterCount,
@@ -201,13 +140,7 @@ const removeSection = (sectionIndex) => {
     emojiList,
 
     // section/row state
-    removeSection,
-    sections,
-    addSection,
-    addRow,
-    updateRow,
-    updateSectionTitle,
-    removeRow,
+
   };
 };
 

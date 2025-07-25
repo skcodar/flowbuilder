@@ -1,17 +1,14 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo,} from "react";
 import { Handle, Position } from "@xyflow/react";
 import {
     FaTimes,
-    FaBold,
-    FaItalic,
-    FaStrikethrough,
-    FaRegSmile,
     FaLink,
     FaPhoneAlt,
     FaRegClone,
     FaReply,
     FaThLarge,
 } from "react-icons/fa";
+import TextArea from "../component/TextArea";
 import CardHeader from "../component/CardHeader";
 import useCommanFunctions from "../component/useCommanFunction";
 
@@ -19,47 +16,19 @@ const MediaButton = ({ data }) => {
     const {
         showDropdown,
         setShowDropdown,
-        showEmojiPicker,
-        setShowEmojiPicker,
         contentBlocks,
         addBlock,
         removeBlock,
-        isFocused,
-        setIsFocused,
-        html,
-        setHtml,
-        characterCount,
-        setCharacterCount,
         fileInputRef,
-        editorRef,
         dropdownRef,
-        handleInput,
-        execFormat,
-        insertEmoji,
         uploadedFiles,
         setUploadedFiles,
-        MAX_CHARS,
-        emojiList,
+    
+       
     } = useCommanFunctions();
 
-    const [isBoldActive, setIsBoldActive] = useState(false);
-    const [isItalicActive, setIsItalicActive] = useState(false);
-
-    //  Show Active On Bolde And italic
-    useEffect(() => {
-        const checkFormatState = () => {
-            setIsBoldActive(document.queryCommandState("bold"));
-            setIsItalicActive(document.queryCommandState("italic"));
-        };
-
-        document.addEventListener("selectionchange", checkFormatState);
-        return () => {
-            document.removeEventListener("selectionchange", checkFormatState);
-        };
-    }, []);
-
-
     const renderBlock = (block) => {
+        var blockId = block.id;
         const closeIcon = (
             <FaTimes
                 onClick={() => removeBlock(block.id)}
@@ -74,8 +43,8 @@ const MediaButton = ({ data }) => {
                         <FaReply className="shrink-0 text-gray-500 text-sm" />
                         {closeIcon}
                         <div>
-                            <input type="text" placeholder="Quick Reply" className="flex-1 outline-none text-sm" />
-                            <Handle type="source"id={`quick-${block.id}`} position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] !absolute top-[11px] !-translate-y-1/2" />
+                            <input type="text" name={`quick-${block.id}`}  placeholder="Quick Reply" className="flex-1 outline-none text-sm" />
+                            <Handle type="source" id={`quick-${block.id}`} position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] !absolute top-[11px] !-translate-y-1/2" />
                         </div>
                     </div>
                 );
@@ -84,28 +53,28 @@ const MediaButton = ({ data }) => {
                     <div key={block.id} className="relative flex items-center gap-2 rounded-md border border-gray-300 mt-2 bg-white px-2 py-2">
                         {closeIcon}
                         <FaRegClone className="shrink-0 text-gray-500 text-sm" />
-                        <input type="text" placeholder="Copy Code" className="flex-1 outline-none text-sm" />
+                        <input type="text" name="copyCode" placeholder="Copy Code" className="flex-1 outline-none text-sm" />
                     </div>
                 );
             case "phone":
                 return (
-                    <div key={block.id} className="relative flex gap-2 rounded-md border border-gray-300 mt-2 bg-white p-2">
+                    <div key={`phone-${blockId}`}  className="relative flex gap-2 rounded-md border border-gray-300 mt-2 bg-white p-2">
                         {closeIcon}
                         <FaPhoneAlt className="mt-[10px] shrink-0 text-sm text-gray-500" />
                         <div className="flex flex-1 flex-col justify-center gap-1">
-                            <input type="text" placeholder="Title" className="border-b border-gray-300 pb-[2px] outline-none" />
-                            <input type="text" placeholder="Number" className="outline-none" />
+                            <input type="text" id={blockId} cardname="phone" name="phoneTitle" placeholder="Title" className="border-b border-gray-300 pb-[2px] outline-none" />
+                            <input type="text" id={blockId} cardname="phone" name="phoneNo" placeholder="Number" className="outline-none" />
                         </div>
                     </div>
                 );
             case "url":
                 return (
-                    <div key={block.id} className="relative flex gap-2 rounded-md border border-gray-300 mt-2 bg-white p-2">
+                    <div key={`URL-${blockId}`} className="relative flex gap-2 rounded-md border border-gray-300 mt-2 bg-white p-2">
                         {closeIcon}
                         <FaLink className="mt-[10px] shrink-0 text-sm text-gray-500" />
                         <div className="flex flex-1 flex-col gap-1">
-                            <input type="text" placeholder="Title" className="border-b border-gray-300 pb-[2px] outline-none" />
-                            <input type="text" placeholder="URL" className="outline-none" />
+                            <input type="text" id={blockId} cardname="URL" name="urlTitle" placeholder="Title" className="border-b border-gray-300 pb-[2px] outline-none" />
+                            <input type="text" id={blockId} cardname="URL" name="url" placeholder="URL" className="outline-none" />
                         </div>
                     </div>
                 );
@@ -221,61 +190,7 @@ const MediaButton = ({ data }) => {
             {/* ✏️ Body */}
             <div className="p-2">
                 <div className="bg-[#EBF5F3] p-2">
-                    <div className="space-y-1 rounded-md border border-gray-300 bg-white p-2">
-                        <div
-                            ref={editorRef}
-                            contentEditable
-                            suppressContentEditableWarning
-                            onInput={handleInput}
-                            onFocus={() => setIsFocused(true)}
-                            onBlur={() => setIsFocused(false)}
-                            className={`min-h-[96px] w-full rounded p-1 text-sm outline-none ${html === "" && !isFocused ? "text-gray-400" : "text-black"}`}
-                            style={{ whiteSpace: "pre-wrap", cursor: "text" }}
-                        >
-                            {html === "" && !isFocused ? "Type something..." : null}
-                        </div>
-
-                        <div className="flex items-center gap-3 text-xs text-green-800 cursor-pointer relative">
-                            <FaBold
-                                onClick={() => {
-                                    document.execCommand("bold");
-                                    setIsBoldActive(prev => !prev);
-                                }}
-                                className={`cursor-pointer ${isBoldActive ? "bg-green-200 text-black" : "hover:text-black"}`}
-                                style={{ borderRadius: "4px", padding: "2px", fontSize: 'medium' }}
-                            />
-                            <FaItalic
-                                onClick={() => {
-                                    document.execCommand("italic");
-                                    setIsItalicActive(prev => !prev);
-                                }}
-                                className={`cursor-pointer ${isItalicActive ? "bg-green-200 text-black" : "hover:text-black"}`}
-                                style={{ borderRadius: "4px", padding: "2px", fontSize: 'medium' }}
-                            />
-                            <FaStrikethrough />
-                            <FaRegSmile onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="cursor-pointer hover:text-black" />
-
-                            {showEmojiPicker && (
-                                <div
-                                    className="absolute z-20 top-6 left-20 grid grid-cols-5 gap-1 bg-white border border-gray-300 rounded-md p-2 cursor-pointer shadow-lg"
-                                    onMouseDown={(e) => e.preventDefault()}
-                                >
-                                    {emojiList.map((emoji, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => insertEmoji(emoji)}
-                                            className="text-xl hover:scale-110 cursor-pointer transition-transform"
-                                        >
-                                            {emoji}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-
-                            <p className="ml-auto text-right text-[10px] text-gray-400">{characterCount}/{MAX_CHARS}</p>
-                        </div>
-                    </div>
-
+                    <TextArea/>
                     {contentBlocks.map(renderBlock)}
 
                     {/* Add Content Dropdown */}

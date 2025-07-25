@@ -9,6 +9,7 @@ import {
   getBezierPath,
 } from '@xyflow/react';
 import { FaTimes } from 'react-icons/fa';
+import { saveAs } from 'file-saver';
 
 import '@xyflow/react/dist/style.css';
 import FlowStart from './flow/card/FlowStart';
@@ -25,9 +26,8 @@ const nodeTypes = {
 };
 
 const snapGrid = [20, 20];
-const defaultViewport = { x: 0, y: 0, zoom: 1 };
+const defaultViewport = { x: 0, y: 0, zoom: 0.9 };
 
-// ✅ Custom edge with delete icon
 const CustomEdge = ({
   id,
   sourceX,
@@ -99,8 +99,8 @@ const edgeTypes = {
 const CustomNodeFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  // ✅ Delete node by ID
   const deleteNodeById = (nodeId) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeId));
     setEdges((eds) =>
@@ -108,7 +108,6 @@ const CustomNodeFlow = () => {
     );
   };
 
-  // ✅ Add default node on mount
   useEffect(() => {
     setNodes([
       {
@@ -131,7 +130,7 @@ const CustomNodeFlow = () => {
             animated: true,
             data: {
               onDelete: (id) =>
-              setEdges((es) => es.filter((e) => e.id !== id)),
+                setEdges((es) => es.filter((e) => e.id !== id)),
             },
           },
           eds
@@ -171,9 +170,70 @@ const CustomNodeFlow = () => {
     [setNodes]
   );
 
+  // ✅ Export as JSON with all user data
+const exportFlow = () => {
+  if (!reactFlowInstance) return;
+
+  const flow = reactFlowInstance.toObject();
+
+  const updatedNodes = flow.nodes.map((node) => {
+    const nodeElement = document.querySelector(`[data-id='${node.id}']`);
+    if (!nodeElement) return node;
+
+    const updatedData = { ...node.data };
+
+    const inputs = nodeElement.querySelectorAll('input, textarea');
+    inputs.forEach((input) => {
+      if (input.name) {
+        if (input.name === "phoneTitle" || input.name === "urlTitle") {
+          updatedData[`${input.getAttribute('cardname')}-${input.id}`] = [input.value];
+        } else if (input.name === "phoneNo" || input.name === "url") {
+          updatedData[`${input.getAttribute('cardname')}-${input.id}`].push(input.value);
+        } else {
+          updatedData[input.name] = input.value;
+        }
+      }
+    });
+
+    const richEditor = nodeElement.querySelector('[data-role="rich-editor"]');
+    if (richEditor) {
+      updatedData.plainText = richEditor.innerText;
+    }
+
+    return {
+      ...node,
+      data: updatedData,
+    };
+  });
+
+  const flowWithUserData = {
+    ...flow,
+    nodes: updatedNodes,
+  };
+  console.log(flowWithUserData);
+
+  const blob = new Blob([JSON.stringify(flowWithUserData, null, 2)], {
+    type: 'application/json',
+  });
+
+  saveAs(blob, 'my-flow-with-data.json');
+};
+
+
+
   return (
     <div className="w-screen h-screen flex relative">
       <Sidebar />
+
+      {/* 🔹 Export button */}
+      <div className="absolute top-4 right-4 z-10">
+        <button
+          onClick={exportFlow}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Export Flow
+        </button>
+      </div>
 
       <div className="flex-1" onDrop={onDrop} onDragOver={onDragOver}>
         <ReactFlow
@@ -186,6 +246,7 @@ const CustomNodeFlow = () => {
           edgeTypes={edgeTypes}
           snapGrid={snapGrid}
           defaultViewport={defaultViewport}
+          onInit={setReactFlowInstance}
         >
           <Background />
           <Controls />

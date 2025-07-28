@@ -21,11 +21,21 @@ const List = ({ data, id }) => {
   }, [sections, header, footer, buttonLabel, textAreaValue]);
 
   const addSection = () => {
-    setSections((prev) => [
-      ...prev,
-      { id: Date.now(), sectionTitle: "", rows: [] },
-    ]);
-  };
+  setSections((prev) => [
+    ...prev,
+    {
+      id: Date.now(),
+      sectionTitle: "",
+      rows: [
+        {
+          id: Date.now() + 1, 
+          title: "",
+          description: "",
+        },
+      ],
+    },
+  ]);
+};
 
   const addRowToSection = (sectionId) => {
     setSections((prev) =>
@@ -163,7 +173,7 @@ const List = ({ data, id }) => {
               placeholder="Header"
               value={header}
               onChange={(e) => setHeader(e.target.value)}
-              className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm outline-none"
+              className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm outline-none bg-[#ffffff]"
             />
             <TextArea
               onChange={(e) => setTextAreaValue(e.target.value)}
@@ -173,14 +183,14 @@ const List = ({ data, id }) => {
               placeholder="Footer"
               value={footer}
               onChange={(e) => setFooter(e.target.value)}
-              className="w-full my-2 rounded border border-gray-300 px-2 py-1 text-sm outline-none"
+              className="w-full my-2 rounded border border-gray-300 px-2 py-1 text-sm outline-none bg-[#ffffff]"
             />
             <input
               type="text"
               placeholder="Button Label"
               value={buttonLabel}
               onChange={(e) => setButtonLabel(e.target.value)}
-              className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm outline-none"
+              className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm outline-none bg-[#ffffff]"
             />
           </div>
 

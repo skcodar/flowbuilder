@@ -181,20 +181,38 @@ const CustomNodeFlow = () => {
   }, [reactFlowInstance]);
 
 //  Restore Flow-data
-  const onRestore = useCallback(() => {
-    const restoreFlow = async () => {
-      const flow = JSON.parse(localStorage.getItem('my-flow'));
+const onRestore = useCallback(() => {
+  const restoreFlow = async () => {
+    const flow = JSON.parse(localStorage.getItem('my-flow'));
 
-      if (flow) {
-        const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-        setNodes(flow.nodes || []);
-        setEdges(flow.edges || []);
-        setViewport({ x, y, zoom });
-      }
-    };
+    if (flow && Array.isArray(flow.nodes)) {
+      const { x = 0, y = 0, zoom = 1 } = flow.viewport || {};
 
-    restoreFlow();
-  }, [setNodes, setViewport]);
+      const restoredNodes = flow.nodes.map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          onDelete: () => deleteNodeById(node.id),
+        },
+      }));
+
+      const restoredEdges = flow.edges.map((edge) => ({
+        ...edge,
+        data: {
+          ...edge.data,
+          onDelete: (id) => setEdges((es) => es.filter((e) => e.id !== id)),
+        },
+      }));
+
+      setNodes(restoredNodes);
+      setEdges(restoredEdges);
+      setViewport({ x, y, zoom });
+    }
+  };
+
+  restoreFlow();
+}, [setNodes, setEdges, setViewport]);
+
 
   useEffect(() => {
     onRestore()

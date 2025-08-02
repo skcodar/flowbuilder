@@ -64,7 +64,7 @@ const MediaButton = ({ data }) => {
                             onChange={(e) => updateField(id, "quick", e.target.value)}
                             {...commonInputProps}
                         />
-                        <Handle type="source" id={`quick-${id}`} position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] absolute top-[20px]" />
+                        <Handle type="source" id={`${id}`} position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] absolute top-[20px]" />
                     </div>
                 );
             case "copy":
@@ -177,8 +177,14 @@ const MediaButton = ({ data }) => {
             <div className="p-2">
                 <div className="bg-[#EBF5F3] p-2">
                     <TextArea
-                        value={textAreaValue}
-                        onChange={(e) => setTextAreaValue(e.target.value)}
+                    value={data.plainText || ""}
+                    onChange={(val) =>
+                        setNodes((nds) =>
+                        nds.map((n) =>
+                            n.id === id ? { ...n, data: { ...n.data, plainText: val } } : n
+                        )
+                        )
+                    }
                     />
                     {sections.map(renderSection)}
 

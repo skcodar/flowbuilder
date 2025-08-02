@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import useCommanFunctions from "../component/useCommanFunction";
 
-const TextArea = () => {
+const TextArea = ({ value = "", onChange }) => {
   const {
     showEmojiPicker,
     setShowEmojiPicker,
@@ -28,25 +28,38 @@ const TextArea = () => {
   const [isItalicActive, setIsItalicActive] = useState(false);
   const [isStrikethroughActive, setIsStrikethroughActive] = useState(false);
 
+  // ⬇ Set content when value prop changes
+  useEffect(() => {
+    if (editorRef.current && value !== editorRef.current.innerHTML) {
+      editorRef.current.innerHTML = value;
+      setCharacterCount(editorRef.current.innerText.length || 0);
+    }
+  }, [value, editorRef]);
+
   const handleEmojiInsert = (emoji) => {
     insertEmoji(emoji);
     setCharacterCount(editorRef.current?.innerText.length || 0);
     setShowEmojiPicker(false);
+    // Notify parent
+    onChange?.(editorRef.current?.innerHTML || "");
   };
 
-  // ✅ Track formatting state based on selection
+  const handleEditorInput = (e) => {
+    const content = e.currentTarget.innerHTML;
+    handleInput(e);
+    onChange?.(content); // notify parent of content change
+    setCharacterCount(editorRef.current?.innerText.length || 0);
+  };
+
+  // ✅ Track formatting states
   useEffect(() => {
     const updateFormatState = () => {
       if (!editorRef.current || !document.activeElement.contains(editorRef.current)) return;
 
       try {
-        const bold = document.queryCommandState("bold");
-        const italic = document.queryCommandState("italic");
-        const strikethrough = document.queryCommandState("strikethrough");
-
-        setIsBoldActive(bold);
-        setIsItalicActive(italic);
-        setIsStrikethroughActive(strikethrough);
+        setIsBoldActive(document.queryCommandState("bold"));
+        setIsItalicActive(document.queryCommandState("italic"));
+        setIsStrikethroughActive(document.queryCommandState("strikethrough"));
       } catch (e) {
         console.warn("Command state check failed:", e);
       }
@@ -68,32 +81,32 @@ const TextArea = () => {
 
   return (
     <div className="space-y-1 rounded-md border border-gray-300 bg-white p-2 relative">
-      {!html && !isFocused && (
+      {/* Placeholder */}
+      {!isFocused && (!editorRef.current || editorRef.current.innerText.trim() === "") && (
         <div className="absolute text-sm text-gray-400 px-3 pt-[6px] pointer-events-none">
           Type something...
         </div>
       )}
 
+      {/* Editable div */}
       <div
         ref={editorRef}
         contentEditable
         data-role="rich-editor"
         suppressContentEditableWarning
-        onInput={handleInput}
+        onInput={handleEditorInput}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className="min-h-[96px] w-full rounded p-1 text-sm outline-none text-black resize-none"
         style={{ whiteSpace: "pre-wrap", cursor: "text" }}
       />
 
+      {/* Toolbar */}
       <div className="flex items-center gap-3 text-xs text-green-800 cursor-pointer relative">
         <FaBold
           onClick={() => {
             execFormat("bold");
-            setTimeout(() => {
-              const bold = document.queryCommandState("bold");
-              setIsBoldActive(bold);
-            }, 0);
+            setTimeout(() => setIsBoldActive(document.queryCommandState("bold")), 0);
           }}
           className={`cursor-pointer ${isBoldActive ? "bg-green-200 text-black" : "hover:text-black"}`}
           style={{ borderRadius: "4px", padding: "2px", fontSize: "medium" }}
@@ -101,10 +114,7 @@ const TextArea = () => {
         <FaItalic
           onClick={() => {
             execFormat("italic");
-            setTimeout(() => {
-              const italic = document.queryCommandState("italic");
-              setIsItalicActive(italic);
-            }, 0);
+            setTimeout(() => setIsItalicActive(document.queryCommandState("italic")), 0);
           }}
           className={`cursor-pointer ${isItalicActive ? "bg-green-200 text-black" : "hover:text-black"}`}
           style={{ borderRadius: "4px", padding: "2px", fontSize: "medium" }}
@@ -112,10 +122,7 @@ const TextArea = () => {
         <FaStrikethrough
           onClick={() => {
             execFormat("strikethrough");
-            setTimeout(() => {
-              const strike = document.queryCommandState("strikethrough");
-              setIsStrikethroughActive(strike);
-            }, 0);
+            setTimeout(() => setIsStrikethroughActive(document.queryCommandState("strikethrough")), 0);
           }}
           className={`cursor-pointer ${isStrikethroughActive ? "bg-green-200 text-black" : "hover:text-black"}`}
           style={{ borderRadius: "4px", padding: "2px", fontSize: "medium" }}
@@ -125,6 +132,7 @@ const TextArea = () => {
           className="cursor-pointer hover:text-black"
         />
 
+        {/* Emoji Picker */}
         {showEmojiPicker && (
           <div
             className="absolute z-20 top-6 left-20 grid grid-cols-5 gap-1 bg-white border border-gray-300 rounded-md p-2 shadow-lg"
@@ -142,6 +150,7 @@ const TextArea = () => {
           </div>
         )}
 
+        {/* Character counter */}
         <p className="ml-auto text-right text-[10px] text-gray-400">
           {characterCount}/{MAX_CHARS}
         </p>

@@ -9,6 +9,7 @@ import {
   getBezierPath,
   useReactFlow,
 } from '@xyflow/react';
+import {generateRandom12DigitKey} from './flow/component/useCommanFunction'
 import { FaTimes } from 'react-icons/fa';
 import '@xyflow/react/dist/style.css';
 import FlowStart from './flow/card/FlowStart';
@@ -18,7 +19,7 @@ import MediaButton from './flow/card/MediaButton';
 import List from './flow/card/List';
 
 const nodeTypes = {
-  customInput: FlowStart,
+  init: FlowStart,
   textButton: TextButton,
   mediaButton: MediaButton,
   list: List,
@@ -113,7 +114,7 @@ const CustomNodeFlow = () => {
     setNodes([
       {
         id: '1',
-        type: 'customInput',
+        type: 'init',
         position: { x: 40, y: 60 },
         data: { onDelete: () => deleteNodeById('1') },
         dragHandle: '.drag-handle__custom',
@@ -156,13 +157,12 @@ const CustomNodeFlow = () => {
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       };
-
-      const id = `${+new Date()}`;
+       const newID=generateRandom12DigitKey();
       const newNode = {
-        id,
+        id: newID,
         type,
         position,
-        data: { onDelete: () => deleteNodeById(id) },
+        data: { onDelete: () => deleteNodeById(newID) },
         dragHandle: '.drag-handle__custom',
       };
 
@@ -171,32 +171,87 @@ const CustomNodeFlow = () => {
     [setNodes]
   );
 
+const saveFlow = useCallback(async () => {
+  const flow = reactFlowInstance.toObject();
 
+  const updatedNodes = flow.nodes.map((node) => {
+    const nodeElement = document.querySelector(`[data-id='${node.id}']`);
+    if (!nodeElement) return node;
 
-  const saveFlow = useCallback(() => {
-    if (reactFlowInstance) {
-      const flow = reactFlowInstance.toObject();
-      localStorage.setItem('my-flow', JSON.stringify(flow));
+    const updatedData = { ...node.data };
+    const inputs = nodeElement.querySelectorAll('input, textarea');
+
+    inputs.forEach((input) => {
+      const key = input.name;
+      if (!key) return;
+      updatedData[key] = input.value;
+    });
+
+    const richEditor = nodeElement.querySelector('[data-role="rich-editor"]');
+    if (richEditor) {
+      updatedData.plainText = richEditor.innerText;
     }
-  }, [reactFlowInstance]);
+
+    return {
+      ...node,
+      data: updatedData,
+    };
+  });
+
+  const updatedEdges = flow.edges.map((edge) => {
+    const edgeElement = document.querySelector(`[data-edgeid='${edge.id}']`);
+    if (!edgeElement) return edge;
+
+    const updatedEdge = { ...edge };
+
+    const labelInput = edgeElement.querySelector('input, textarea, [contenteditable="true"]');
+    if (labelInput) {
+      const text =
+        labelInput.tagName === 'INPUT' || labelInput.tagName === 'TEXTAREA'
+          ? labelInput.value
+          : labelInput.innerText;
+
+      updatedEdge.label = text;
+    }
+
+    return updatedEdge;
+  });
+
+  const flowWithUserData = {
+    ...flow,
+    nodes: updatedNodes,
+    edges: updatedEdges,
+  };
+
+  localStorage.setItem('my-flow', JSON.stringify(flowWithUserData));
+
+   // ✅ Export JSON file
+  // const blob = new Blob([JSON.stringify(flowWithUserData, null, 2)], { type: 'application/json' });
+  // const url = URL.createObjectURL(blob);
+  // const link = document.createElement('a');
+  // link.href = url;
+  // link.download = 'my-flow.json';
+  // document.body.appendChild(link);
+  // link.click();
+  // document.body.removeChild(link);
+  // URL.revokeObjectURL(url);
+}, [reactFlowInstance]);
 
 //  Restore Flow-data
 const onRestore = useCallback(() => {
   const restoreFlow = async () => {
     const flow = JSON.parse(localStorage.getItem('my-flow'));
 
-    if (flow && Array.isArray(flow.nodes)) {
+    if (flow) {
       const { x = 0, y = 0, zoom = 1 } = flow.viewport || {};
-
-      const restoredNodes = flow.nodes.map((node) => ({
+      const restoredNodes = (flow.nodes || []).map((node) => ({
         ...node,
         data: {
           ...node.data,
-          onDelete: () => deleteNodeById(node.id),
+          onDelete: () => deleteNodeById(node.id), 
         },
       }));
-
-      const restoredEdges = flow.edges.map((edge) => ({
+      const restoredEdges = (flow.edges || []).map((edge) => ({
         ...edge,
         data: {
           ...edge.data,
@@ -212,7 +267,6 @@ const onRestore = useCallback(() => {
 
   restoreFlow();
 }, [setNodes, setEdges, setViewport]);
-
 
   useEffect(() => {
     onRestore()

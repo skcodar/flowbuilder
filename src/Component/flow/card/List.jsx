@@ -3,6 +3,7 @@ import { Handle, Position } from "@xyflow/react";
 import { FaTimes, FaThLarge } from "react-icons/fa";
 import CardHeader from "../component/CardHeader";
 import TextArea from "../component/TextArea";
+import {generateRandom12DigitKey} from '../component/useCommanFunction'
 
 const List = ({ data, id }) => {
   const [sections, setSections] = useState(data?.sections || []);
@@ -24,11 +25,11 @@ const List = ({ data, id }) => {
   setSections((prev) => [
     ...prev,
     {
-      id: Date.now(),
+      id: generateRandom12DigitKey(),
       sectionTitle: "",
       rows: [
         {
-          id: Date.now() + 1, 
+          id: generateRandom12DigitKey(), 
           title: "",
           description: "",
         },
@@ -45,7 +46,7 @@ const List = ({ data, id }) => {
               ...section,
               rows: [
                 ...section.rows,
-                { id: Date.now(), title: "", description: "" },
+                { id: generateRandom12DigitKey(), title: "", description: "" },
               ],
             }
           : section
@@ -139,7 +140,7 @@ const List = ({ data, id }) => {
           </div>
           <Handle
             type="source"
-            id={`row-${row.id}`}
+            id={row.id}
             position={Position.Right}
             className="!w-2.5 !h-2.5 !bg-[#E4DFDF] absolute top-[14px] right-[-6px]"
           />
@@ -175,9 +176,16 @@ const List = ({ data, id }) => {
               onChange={(e) => setHeader(e.target.value)}
               className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm outline-none bg-[#ffffff]"
             />
-            <TextArea
-              onChange={(e) => setTextAreaValue(e.target.value)}
-            />
+              <TextArea
+              value={data.plainText || ""}
+              onChange={(val) =>
+                  setNodes((nds) =>
+                  nds.map((n) =>
+                      n.id === id ? { ...n, data: { ...n.data, plainText: val } } : n
+                  )
+                  )
+              }
+              />
             <input
               type="text"
               placeholder="Footer"

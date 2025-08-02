@@ -10,24 +10,27 @@ import {
 } from "react-icons/fa";
 import CardHeader from "../component/CardHeader";
 import TextArea from "../component/TextArea";
+import {generateRandom12DigitKey} from '../component/useCommanFunction'
 
 const TextButton = ({ data }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [sections, setSections] = useState(data?.sections || []);
     const [textAreaValue, setTextAreaValue] = useState(data?.textAreaValue || "");
+    const [plainText, setPlainText] = useState(data?.plainText || ""); // ✅ Added local state
 
     useEffect(() => {
         data.sections = sections;
         data.textAreaValue = textAreaValue;
-    }, [sections, textAreaValue]);
+        data.plainText = plainText; // ✅ Sync with data
+    }, [sections, textAreaValue, plainText]);
 
     const addSection = (type) => {
-        const newSection = { id: Date.now(), type, values: {} };
+        const newSection = { id: generateRandom12DigitKey(), type, values: {} };
 
         setSections((prev) =>
             type === "quick"
-                ? [newSection, ...prev] // ✅ add quick reply at the top
-                : [...prev, newSection] 
+                ? [newSection, ...prev]
+                : [...prev, newSection]
         );
     };
 
@@ -42,7 +45,7 @@ const TextButton = ({ data }) => {
             )
         );
     };
-    //  DropDown List add
+
     const renderSection = (section) => {
         const { id, type, values } = section;
         const commonInputProps = {
@@ -62,7 +65,7 @@ const TextButton = ({ data }) => {
                             onChange={(e) => updateField(id, "quick", e.target.value)}
                             {...commonInputProps}
                         />
-                        <Handle type="source" id={`quick-${id}`} position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] absolute top-[20px] " />
+                        <Handle type="source" id={`${id}`} position={Position.Right} className="!w-2.5 !h-2.5 !bg-[#E4DFDF] absolute top-[20px]" />
                     </div>
                 );
             case "copy":
@@ -142,8 +145,8 @@ const TextButton = ({ data }) => {
             <div className="p-2">
                 <div className="bg-[#EBF5F3] p-2">
                     <TextArea
-                        value={textAreaValue}
-                        onChange={(e) => setTextAreaValue(e.target.value)}
+                        value={plainText}
+                        onChange={(val) => setPlainText(val)} // ✅ Local update
                     />
                     {sections.map(renderSection)}
 
@@ -187,14 +190,13 @@ const TextButton = ({ data }) => {
                                 </button>
                                 <button
                                     onClick={() => {
-
                                         if (urlCount < 2) {
                                             addSection("url");
                                             setShowDropdown(false);
                                         }
                                     }}
-                                    disabled={sections.filter((s) => s.type === "url").length >= 2}
-                                    className={`w-full flex items-center gap-2 px-4 py-3 text-sm border-b border-[#E4DFDF] ${sections.filter((s) => s.type === "url").length >= 2
+                                    disabled={urlCount >= 2}
+                                    className={`w-full flex items-center gap-2 px-4 py-3 text-sm border-b border-[#E4DFDF] ${urlCount >= 2
                                             ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                                             : "hover:bg-gray-100"
                                         }`}

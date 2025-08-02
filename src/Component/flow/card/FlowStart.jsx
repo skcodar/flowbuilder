@@ -1,10 +1,16 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { FaRocket, FaTimes ,FaArrowRight } from 'react-icons/fa';
+import { FaRocket, FaTimes, FaArrowRight } from 'react-icons/fa';
 
-const FlowStartNode = () => {
-  const [keywords, setKeywords] = useState(['Hii', 'Hi', 'Hello']);
+
+const FlowStartNode = ({ data, id }) => {
+  const [sections, setKeywords] = useState(data.sections || ['Hi', 'Hello']);
   const [inputValue, setInputValue] = useState('');
+
+  // Update parent node data when sections change
+  useEffect(() => {
+    data.sections = sections;
+  }, [sections]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && inputValue.trim() !== '') {
@@ -18,15 +24,14 @@ const FlowStartNode = () => {
   };
 
   return (
-    <div className="relative w-[260px] rounded-md border border-gray-200 bg-white shadow-lg text-[13px]">
-      {/* Right Handle */}
+    <div data-id={id} className="relative w-[260px] rounded-md border border-gray-200 bg-white shadow-lg text-[13px]">
       <Handle
+      id="1"
         type="source"
         position={Position.Right}
         className="!w-3 !h-3 !bg-[#E4DFDF]"
       />
 
-      {/* Header */}
       <header className="drag-handle__custom cursor-move relative flex items-center justify-between px-3 py-2 shadow-lg">
         <span className="absolute left-0 top-0 h-full w-[6px] rounded-l-md bg-green-600" />
         <div className="flex items-center gap-2">
@@ -34,22 +39,18 @@ const FlowStartNode = () => {
             <FaRocket className="text-[17px]" />
           </span>
           <span className="text-[16px] font-semibold text-green-700">
-            Fow Start
+            Flow Start
           </span>
         </div>
         <button className="flex items-center gap-1 text-green-600 hover:text-red-500 cursor-pointer">
-      
           <FaArrowRight className="text-[15px]" />
         </button>
-
       </header>
 
-      {/* Content */}
-      <div className='p-2 cursor-pointer'>
+      <div className="p-2 cursor-pointer">
         <div className="p-2 bg-[#EBF5F3]">
-          {/* Keyword List */}
           <div className="space-y-2 mb-2">
-            {keywords.map((word, index) => (
+            {sections.map((word, index) => (
               <div
                 key={index}
                 className="w-full flex items-center justify-between mb-2 rounded border border-gray-300 px-2 py-1 text-sm bg-white"
@@ -65,7 +66,6 @@ const FlowStartNode = () => {
             ))}
           </div>
 
-          {/* Input */}
           <input
             type="text"
             value={inputValue}
@@ -75,7 +75,6 @@ const FlowStartNode = () => {
             className="w-full mb-2 rounded border border-gray-300 px-2 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
           />
 
-          {/* Choose Template Button */}
           <button className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 mt-2 py-2 text-[14px] font-medium text-gray-700 cursor-pointer hover:bg-gray-300">
             Choose template
           </button>

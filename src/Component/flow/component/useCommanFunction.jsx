@@ -108,13 +108,6 @@ const useCommanFunctions = () => {
 
 
 
-// List Component
-
-  // ➕ Add a new section
-  
-
-
-
   return {
     // content state
     showDropdown,
@@ -138,10 +131,14 @@ const useCommanFunctions = () => {
     setUploadedFiles,
     MAX_CHARS,
     emojiList,
-
-    // section/row state
+      // section/row state
 
   };
 };
+
+// unick key generat
+export const generateRandom12DigitKey = () => {
+  return Math.floor(100000000000 + Math.random() * 900000000000).toString();
+}
 
 export default useCommanFunctions;

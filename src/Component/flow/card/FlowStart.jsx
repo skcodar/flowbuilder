@@ -2,31 +2,39 @@ import React, { memo, useEffect, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { FaRocket, FaTimes, FaArrowRight } from 'react-icons/fa';
 
-
 const FlowStartNode = ({ data, id }) => {
-  const [sections, setKeywords] = useState(data.sections || ['Hi', 'Hello']);
+  // Updated to store objects with text and type
+  const [sections, setSections] = useState(
+    data.sections || [
+      { text: 'Hi', type: 'default' },
+      { text: 'Hello', type: 'default' }
+    ]
+  );
   const [inputValue, setInputValue] = useState('');
 
-  // Update parent node data when sections change
+  // Sync updated sections with parent node data
   useEffect(() => {
     data.sections = sections;
   }, [sections]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && inputValue.trim() !== '') {
-      setKeywords((prev) => [...prev, inputValue.trim()]);
+      setSections((prev) => [
+        ...prev,
+        { text: inputValue.trim(), type: 'default' } // add type here
+      ]);
       setInputValue('');
     }
   };
 
   const handleRemove = (indexToRemove) => {
-    setKeywords((prev) => prev.filter((_, i) => i !== indexToRemove));
+    setSections((prev) => prev.filter((_, i) => i !== indexToRemove));
   };
 
   return (
     <div data-id={id} className="relative w-[260px] rounded-md border border-gray-200 bg-white shadow-lg text-[13px]">
       <Handle
-      id="1"
+        id="1"
         type="source"
         position={Position.Right}
         className="!w-3 !h-3 !bg-[#E4DFDF]"
@@ -50,12 +58,12 @@ const FlowStartNode = ({ data, id }) => {
       <div className="p-2 cursor-pointer">
         <div className="p-2 bg-[#EBF5F3]">
           <div className="space-y-2 mb-2">
-            {sections.map((word, index) => (
+            {sections.map((section, index) => (
               <div
                 key={index}
                 className="w-full flex items-center justify-between mb-2 rounded border border-gray-300 px-2 py-1 text-sm bg-white"
               >
-                <span>{word}</span>
+                <span>{section.text}</span>
                 <button
                   className="hover:text-red-600 text-green-800 cursor-pointer"
                   onClick={() => handleRemove(index)}

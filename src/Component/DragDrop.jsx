@@ -122,24 +122,37 @@ const CustomNodeFlow = () => {
     ]);
   }, []);
 
-  const onConnect = useCallback(
-    (params) =>
-      setEdges((eds) =>
-        addEdge(
-          {
-            ...params,
-            type: 'custom',
-            animated: true,
-            data: {
-              onDelete: (id) =>
-                setEdges((es) => es.filter((e) => e.id !== id)),
-            },
+const onConnect = useCallback(
+  (params) => {
+    setEdges((eds) => {
+      // ✅ Block if source already has an outgoing connection
+      const sourceAlreadyConnected = eds.some(
+        (e) => e.source === params.source && e.sourceHandle === params.sourceHandle
+      );
+
+      if (sourceAlreadyConnected) {
+        console.warn("❌ Source handle already connected to a target");
+        return eds; // ❌ Do not add
+      }
+
+      // ✅ Allow multiple sources to connect into same target
+      return addEdge(
+        {
+          ...params,
+          type: "custom",
+          animated: true,
+          data: {
+            onDelete: (id) =>
+              setEdges((es) => es.filter((e) => e.id !== id)),
           },
-          eds
-        )
-      ),
-    [setEdges]
-  );
+        },
+        eds
+      );
+    });
+  },
+  [setEdges]
+);
+
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -224,6 +237,7 @@ const saveFlow = useCallback(async () => {
   };
 
   localStorage.setItem('my-flow', JSON.stringify(flowWithUserData));
+  console.log("data save");
 
    // ✅ Export JSON file
   // const blob = new Blob([JSON.stringify(flowWithUserData, null, 2)], { type: 'application/json' });

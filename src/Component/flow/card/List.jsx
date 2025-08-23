@@ -6,11 +6,13 @@ import TextArea from "../component/TextArea";
 import {generateRandom12DigitKey} from '../component/useCommanFunction'
 
 const List = ({ data, id }) => {
+  
   const [sections, setSections] = useState(data?.sections || []);
   const [header, setHeader] = useState(data?.header || "");
   const [footer, setFooter] = useState(data?.footer || "");
   const [buttonLabel, setButtonLabel] = useState(data?.buttonLabel || "");
   const [textAreaValue, setTextAreaValue] = useState(data?.textAreaValue || "");
+  const [plainText, setPlainText] = useState(data?.plainText || "");
 
   // ✅ Directly mutate `data` to ensure it's included in export
   useEffect(() => {
@@ -176,16 +178,10 @@ const List = ({ data, id }) => {
               onChange={(e) => setHeader(e.target.value)}
               className="w-full mb-2 rounded border border-gray-300 px-2 py-1 text-sm outline-none bg-[#ffffff]"
             />
-              <TextArea
-              value={data.plainText || ""}
-              onChange={(val) =>
-                  setNodes((nds) =>
-                  nds.map((n) =>
-                      n.id === id ? { ...n, data: { ...n.data, plainText: val } } : n
-                  )
-                  )
-              }
-              />
+             <TextArea
+              value={plainText}
+              onChange={(val) => setPlainText(val)} 
+            />
             <input
               type="text"
               placeholder="Footer"
